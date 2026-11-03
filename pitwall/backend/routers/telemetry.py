@@ -5,10 +5,16 @@ import json
 import fastf1.plotting
 import plotly.graph_objects as go
 from ..services import FastF1Service
+from ..services.fastf1_services import DataNotLoadedError
 import pandas as pd
 
 router = APIRouter(prefix="/api/telemetry", tags=["Telemetry"])
 f1_service = FastF1Service()
+
+# FastF1 raises DataNotLoadedError when F1 live timing has no data for a session
+# (e.g. the API refuses the request and nothing is cached). That's an upstream
+# outage, not a server bug, so report 503 instead of a 500.
+SESSION_UNAVAILABLE = "Lap data for this session could not be loaded from F1 live timing."
 
 # Session name map — frontend sends "Race", FastF1 wants "R"
 SESSION_MAP = {
@@ -169,6 +175,8 @@ async def position_changes(
 
     except HTTPException:
         raise
+    except DataNotLoadedError:
+        raise HTTPException(status_code=503, detail=SESSION_UNAVAILABLE)
     except Exception as e:
         print(f"ERROR1: {type(e).__name__}: {e}")
         import traceback
@@ -236,6 +244,8 @@ async def get_tyre_strategy(year: int, gp: str, session: str = "R", drivers: str
         )
 
         return json.loads(fig.to_json())
+    except DataNotLoadedError:
+        raise HTTPException(status_code=503, detail=SESSION_UNAVAILABLE)
     except Exception as e:
         print(f"ERROR2: {type(e).__name__}: {e}")
         import traceback
@@ -321,6 +331,8 @@ async def get_gear_shifts(year: int, gp: str, session: str = "R", drivers: str =
         return json.loads(fig.to_json())
     except HTTPException:
         raise
+    except DataNotLoadedError:
+        raise HTTPException(status_code=503, detail=SESSION_UNAVAILABLE)
     except Exception as e:
         print(f"ERROR GEAR SHIFTS: {type(e).__name__}: {e}")
         import traceback
@@ -446,6 +458,8 @@ async def get_speed_traces(year: int, gp: str, session: str = "R", drivers: str 
         return json.loads(fig.to_json())
     except HTTPException:
         raise
+    except DataNotLoadedError:
+        raise HTTPException(status_code=503, detail=SESSION_UNAVAILABLE)
     except Exception as e:
         print(f"ERROR SPEED TRACES: {type(e).__name__}: {e}")
         import traceback
