@@ -11,7 +11,6 @@ from eval_llm import (
     eval_factual_accuracy,
     eval_llm_as_judge,
 )
-from eval_models import eval_tyre_deg_model, eval_race_winner_model
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "evals" / "reports"
