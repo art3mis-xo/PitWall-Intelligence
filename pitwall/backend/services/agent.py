@@ -122,12 +122,11 @@ tool_node = ToolNode(TOOLS)
 
 SYSTEM_PROMPT = """You are PitWall Intelligence, an expert F1 analyst AI.
  
-You have access to four tools:
+You have access to three tools:
 - race_predictor_tool: predict finishing order for any F1 race
 - explain_prediction_tool: get SHAP-grounded explanation for a driver's predicted result
 - features_for_stats_tool: look up historical driver statistics
-- search_regulations_tool: search F1 sporting regulations
- 
+
 Always ground your answers in data from these tools and any explicit race context in the user message. Do not invent statistics, grid positions, pole positions, or race results.
 When explaining predictions, cite the specific SHAP values returned by explain_prediction.
 Distinguish predicted finishing position from starting grid position. Never describe P4 as pole or front row, and never say pole-to-win unless the supplied grid position is P1.
