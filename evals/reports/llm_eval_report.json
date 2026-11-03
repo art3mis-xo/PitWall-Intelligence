@@ -1,0 +1,59 @@
+{
+  "factual_accuracy": {
+    "avg_factual_score": 0.125,
+    "total_hallucinations": 0,
+    "results": [
+      {
+        "id": "monaco_2024_red_flag",
+        "facts_score": 0.0,
+        "hallucinations": [],
+        "response": "The 2024 Monaco Grand Prix was a thrilling race that saw Max Verstappen take the win, but it was the events at lap 1 that set the tone for the rest of the race. At the start, Max Verstappen and Charles Leclerc were side by side, with Verstappen taking the inside line and gaining the upper hand. This allowed him to maintain his position and eventually take the lead. Meanwhile, Charles Leclerc struggled to get past Verstappen, and his race was effectively over. The events at lap 1 were crucial because they gave Verstappen a significant advantage, allowing him to control the pace of the race and dictate the strategy. This meant that the rest of the field had to play catch-up, and it was a challenge that many drivers struggled to overcome. In the end, Verstappen's strong start and control of the race allowed him to take the win, while Leclerc's struggles at the beginning of the race ultimately cost him a podium finish. The events at lap 1 of the 2024 Monaco GP were a turning point in the race, and they had a significant impact on the final result. The strategic implications of this event were far-reaching, and it's clear that the outcome of the race was influenced by the events that unfolded at the very beginning. The 2024 Monaco GP was a thrilling race that saw Max Verstappen take the win, but it was the events at lap 1 that"
+      },
+      {
+        "id": "monaco_2024_winner",
+        "facts_score": 0.25,
+        "hallucinations": [],
+        "response": "The 2024 Monaco Grand Prix was won by Max Verstappen, who drove for Red Bull Racing. The race was a closely contested one, with Verstappen facing stiff competition from his teammate Sergio P\u00e9rez and the Ferrari drivers. Despite the challenges, Verstappen was able to secure the victory, thanks in part to a well-executed strategy that allowed him to maintain a strong pace throughout the race. The exact details of the strategy are not publicly available, but it's clear that Verstappen's team made some key decisions that helped him emerge victorious. The 2024 Monaco Grand Prix was a thrilling event that showcased the skill and determination of the drivers, and it will be remembered as one of the most exciting races of the season. The victory marked a significant milestone for Verstappen, who has been a dominant force in the sport for several years. His win in Monaco was a testament to his ability to perform under pressure and to his commitment to excellence. The 2024 Monaco Grand Prix was a memorable event that will be celebrated by fans and drivers alike for a long time to come. The victory was a result of a combination of factors, including Verstappen's exceptional driving skills, the strength of his car, and the strategic decisions made by his team. The 2024 Monaco Grand Prix was a true test of endurance and skill, and it will be remembered as one of the greatest races in the history of the sport. The victory marked a significant milestone for Ver"
+      }
+    ]
+  },
+  "depth_calibration": {
+    "avg_depth_gap": 1.0,
+    "calibrated": false,
+    "results": [
+      {
+        "question": "Why did the team pit during the safety car?",
+        "fan_tech_terms": 0,
+        "eng_tech_terms": 0,
+        "gap": 0
+      },
+      {
+        "question": "How should a team choose between an undercut and an overcut?",
+        "fan_tech_terms": 0,
+        "eng_tech_terms": 2,
+        "gap": 2
+      }
+    ]
+  },
+  "llm_as_judge": {
+    "avg_accuracy": 4.0,
+    "avg_clarity": 5.0,
+    "avg_domain_knowledge": 5.0,
+    "scores": [
+      {
+        "accuracy": 4,
+        "clarity": 5,
+        "domain_knowledge": 5,
+        "reasoning": "The response accurately describes the incident at lap 1 of the 2024 Monaco GP, but lacks specific details about the incident, such as the exact location of the collision and the teams' strategic decisions.",
+        "id": "monaco_2024_red_flag"
+      },
+      {
+        "accuracy": 4,
+        "clarity": 5,
+        "domain_knowledge": 5,
+        "reasoning": "The response mentions Leclerc and Ferrari, but does not specify the winner, which is incorrect.",
+        "id": "monaco_2024_winner"
+      }
+    ]
+  }
+}
