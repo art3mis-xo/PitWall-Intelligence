@@ -1,0 +1,3 @@
+# Apple silicon only: adds MLX for running evals/eval_llm.py against a local model.
+-r requirements.txt
+mlx-lm==0.31.3
