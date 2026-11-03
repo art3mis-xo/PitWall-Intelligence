@@ -1,7 +1,0 @@
-and also, is it possible to make the entire website glassy, like in recent mac icon changes and stuff, an then have a background that like f1 related, and then the texts and everything we have- they are all translucent-ish, and then when we hover or something they have dark background?
-
-./venv/bin/python -m uvicorn pitwall.backend.main:app --reload
-
-cd pitwall/frontend
-npm run dev
-
