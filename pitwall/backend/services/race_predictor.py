@@ -145,7 +145,8 @@ def _top_factors(shap_dict: dict, feat_cols: list, n: int = 5) -> list[dict]:
             "label":     FEATURE_LABELS.get(k, k.replace("_", " ").title()),
             "value":     v,
             "shap_value": v,
-            "direction": "positive" if v < 0 else "negative",
+            # target is finishing position, so a negative SHAP value moves the driver up the order
+            "direction": "improves" if v < 0 else "worsens",
         }
         for k, v in sorted_feats[:n]
     ]

@@ -21,7 +21,7 @@ export interface DriverPrediction {
   top_factors:        Array<{
     feature:   string
     value:     number
-    direction: 'positive' | 'negative'
+    direction: 'improves' | 'worsens'
   }>
 }
 

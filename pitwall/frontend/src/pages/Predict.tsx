@@ -282,7 +282,7 @@ export default function Predict() {
                       feature:    f.feature,
                       label:      f.feature.replace(/_/g, ' '),
                       shap_value: f.value,
-                      direction:  f.direction === 'positive' ? 'improves' : 'worsens',
+                      direction:  f.direction,
                     }))}
                   />
                 ) : null}
