@@ -20,11 +20,10 @@ def run_all_evals():
     report = {}
     REPORTS.mkdir(exist_ok=True)
 
-    print("Running data pipeline evals...")
+    print("Running test suite...")
     # Run pytest programmatically
     result = subprocess.run(
-        [sys.executable, "-m", "pytest", "evals/test_data_pipeline.py", "-v",
-         "--json-report", f"--json-report-file={REPORTS / 'data_pipeline.json'}"],
+        [sys.executable, "-m", "pytest", "tests", "-v"],
         capture_output=True,
         text=True,
         cwd=ROOT,
