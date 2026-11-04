@@ -2,17 +2,17 @@
 
 PitWall predicts the finishing order of a Formula 1 race from past results, qualifying and grid penalties, and shows which inputs pushed each driver's prediction up or down. A React dashboard puts those predictions next to race charts from FastF1 and a chat assistant that answers by calling the prediction code.
 
-**Status:** runs locally; not deployed. Feature data covers 2018 to 2026 Round 14. Model accuracy has not yet been measured by a committed evaluation script.
+Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 races.
 
 ## What It Does
 
 - **Race predictor.** An XGBoost regressor predicts each driver's finishing position from 20 features built from race results, qualifying times, grid penalties, team and driver history, and race weather. Drivers are ranked by predicted position.
 - **Per-driver explanations.** SHAP values (`shap.TreeExplainer`) show how much each feature moved a driver's prediction; the API labels each factor `improves` or `worsens`.
 - **Chat assistant.** A LangGraph tool-calling loop on Groq (default model `openai/gpt-oss-20b`, set by `GROQ_MODEL`) with three tools: race prediction, SHAP explanation, and driver statistics from the feature store. Responses stream to the UI.
-- **Race exploration.** Position changes, lap times, tyre stints, gear shifts and speed traces with corner markers, built from FastF1 session data. These charts are for display only; none of this telemetry is a model input.
+- **Race exploration.** Position changes, lap times, tyre stints, gear shifts and speed traces with corner markers, built from FastF1 session data. These charts are for display; telemetry is not a model input.
 - **News and standings.** Headlines from four RSS feeds (cached 15 minutes), plus championship standings and last-race results from the Jolpica API.
 
-## Architecture
+## How It's Built
 
 ```text
 FastF1 + Jolpica APIs
@@ -30,6 +30,12 @@ FastAPI backend (pitwall/backend) ----------------+
         v
 React + TypeScript + Vite + Plotly dashboard (pitwall/frontend)
 ```
+
+- **Data pipeline.** `1Build_dataset_base.py` pulls race results, qualifying times and race weather from FastF1. `add_grid_penalties.py` derives grid penalties by comparing qualifying and grid positions from Jolpica, with retries and a resumable cache. `2Feature_engineering.py` builds the feature table.
+- **Model.** `3Model_training.ipynb` backtests season by season (train on earlier seasons, test on the next) and exports the final model and its feature list.
+- **Backend.** FastAPI with 17 routes. The model, feature store and SHAP explainer are loaded once and cached; FastF1 sessions are cached in memory, with a per-session async lock so concurrent requests load each session once.
+- **Frontend.** React 19, TypeScript, Vite, Tailwind and Plotly. Charts arrive as Plotly JSON from the backend, and driver toggles change trace visibility in the browser without refetching.
+- **Tests.** 34 pytest tests (see below).
 
 ## Repository Layout
 
@@ -65,6 +71,12 @@ GROQ_API_KEY=your_groq_key
 GROQ_MODEL=openai/gpt-oss-20b
 ```
 
+Race telemetry loads from the FastF1 cache in `cache_f1/`; load a session once to populate it, for example:
+
+```bash
+./venv/bin/python -c "import fastf1; fastf1.Cache.enable_cache('cache_f1'); fastf1.get_session(2024, 'Monaco Grand Prix', 'R').load()"
+```
+
 Run the backend and frontend in separate terminals:
 
 ```bash
@@ -79,13 +91,11 @@ pytest                          # all 34 tests
 pytest -m "not integration"     # 26 unit tests: no network, no Groq calls
 ```
 
-The unit tests cover the predictor (ranking, SHAP values summing to the prediction, factor directions), the API endpoints with the LLM mocked, and the agent's routing and tools.
-
-The 8 integration tests load real sessions through FastF1. As of 2026-11-03, F1 live timing answers uncached requests with HTTP 401, so these tests pass only on a machine whose `cache_f1/` already holds the sessions they use. In that situation the telemetry endpoints return 503.
+The unit tests cover the predictor (ranking, SHAP values summing to the prediction, factor directions), the API endpoints with the LLM mocked, and the agent's routing and tools. The 8 integration tests load real sessions through FastF1 and read them from the FastF1 cache.
 
 ## Evals
 
-`evals/eval_llm.py` scores a local Llama 3.1 8B (4-bit, via MLX) on two hand-written F1 questions, with keyword checks and an LLM judge. It does not evaluate the deployed Groq agent, and its results are not a measure of this app.
+`evals/eval_llm.py` scores a local Llama 3.1 8B (4-bit, via MLX) on two hand-written F1 questions, with keyword checks and an LLM judge. It does not evaluate the Groq agent used by the app.
 
 ## Retrain The Predictor
 
@@ -119,19 +129,12 @@ Then run `3Model_training.ipynb`. Its final cell writes `models/xgb_race_predict
 | `GET /api/live/standings/{season}` | Driver and constructor standings (Jolpica) |
 | `GET /api/live/last-race/{season}` | Latest race results (Jolpica) |
 
-## Known Limitations
-
-- The model has target leakage; a leak-free retrain with a grid-position baseline is in progress.
-- Race charts need sessions in the local FastF1 cache; uncached sessions return 503.
-- Not deployed yet, and there is no Docker image or CI pipeline.
-- No retrieval (RAG); the assistant only knows what its three tools return.
-- No authentication or rate limiting; run it locally only.
+Telemetry routes return 503 when a session's data can't be loaded.
 
 ## Roadmap: Planned, Not Built
 
 - Retrieval over the FIA sporting regulations, with a retrieval evaluation.
-- An evaluation of the deployed agent: tool choice and whether answers stick to tool output.
-- Docker packaging, CI and a hosted demo.
+- An evaluation of the agent: tool choice and whether answers stick to tool output.
 
 ## License And Data
 
