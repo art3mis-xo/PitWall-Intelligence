@@ -11,6 +11,7 @@ except ImportError:
     from fastf1.core import DataNotLoadedError
 
 CACHE_PATH = Path(__file__).resolve().parents[3] / "cache_f1"
+CACHE_PATH.mkdir(exist_ok=True)  # gitignored, so absent on a fresh clone
 
 fastf1.Cache.enable_cache(str(CACHE_PATH))
 
