@@ -153,13 +153,13 @@ export default function Landing() {
             </h1>
             <p className="text-gray-400 text-base max-w-lg leading-relaxed">
               AI-powered predictions, SHAP-grounded explanations, and live
-              championship data — powered by XGBoost and Llama 3.1.
+              championship data — powered by XGBoost and Groq.
             </p>
             <div className="flex gap-6 mt-6">
               {[
-                ['0.857', 'Spearman · 2025 test'],
-                ['87.1%', 'Top-10 hit rate'],
-                ['3.6k',  'Training rows'],
+                ['3.8k', 'Driver-race rows'],
+                ['187',  'Races since 2018'],
+                ['20',   'Model features'],
               ].map(([val, label]) => (
                 <div key={label}>
                   <div className={`text-2xl font-bold ${
@@ -349,12 +349,12 @@ export default function Landing() {
             </button>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-800 rounded-xl p-3 text-center">
-                <div className="text-lg font-bold text-green-400">0.857</div>
-                <div className="text-xs text-gray-600">Spearman</div>
+                <div className="text-lg font-bold text-green-400">20</div>
+                <div className="text-xs text-gray-600">Features</div>
               </div>
               <div className="bg-gray-800 rounded-xl p-3 text-center">
-                <div className="text-lg font-bold text-green-400">87%</div>
-                <div className="text-xs text-gray-600">Top-10 hit</div>
+                <div className="text-lg font-bold text-green-400">SHAP</div>
+                <div className="text-xs text-gray-600">Per-driver factors</div>
               </div>
             </div>
           </div>
