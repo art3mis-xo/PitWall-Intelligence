@@ -270,7 +270,7 @@ async def get_gear_shifts(year: int, gp: str, session: str = "R", drivers: str =
 
         for driver in driver_list:
             laps = sess.laps.pick_drivers(driver).pick_fastest()
-            if laps.empty:
+            if laps is None or laps.empty:  # None when the driver set no timed lap
                 continue
 
             telemetry = laps.get_telemetry()
@@ -354,7 +354,7 @@ async def get_speed_traces(year: int, gp: str, session: str = "R", drivers: str 
 
         for driver in driver_list:
             lap = sess.laps.pick_drivers(driver).pick_fastest()
-            if lap.empty:
+            if lap is None or lap.empty:  # None when the driver set no timed lap
                 continue
 
             telemetry = lap.get_telemetry()
