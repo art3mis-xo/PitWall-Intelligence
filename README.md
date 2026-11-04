@@ -119,10 +119,12 @@ Then run `3Model_training.ipynb`. Its final cell writes `models/xgb_race_predict
 | `GET /api/live/standings/{season}` | Driver and constructor standings (Jolpica) |
 | `GET /api/live/last-race/{season}` | Latest race results (Jolpica) |
 
-## Not Included
+## Known Limitations
 
+- The model has target leakage; a leak-free retrain with a grid-position baseline is in progress.
+- Race charts need sessions in the local FastF1 cache; uncached sessions return 503.
+- Not deployed yet, and there is no Docker image or CI pipeline.
 - No retrieval (RAG); the assistant only knows what its three tools return.
-- No deployment, Docker image or CI pipeline.
 - No authentication or rate limiting; run it locally only.
 
 ## Roadmap: Planned, Not Built
