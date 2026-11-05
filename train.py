@@ -45,11 +45,17 @@ def _relevance(df: pd.DataFrame) -> np.ndarray:
     return (21 - df[TARGET]).clip(lower=0).astype(int).to_numpy()
 
 
+def _grid(df: pd.DataFrame) -> pd.Series:
+    return df["grid_position"].fillna(DNF_POSITION)
+
+
 def fit(config: dict, train: pd.DataFrame):
     X, kind, params = train[config["features"]], config["model"], config.get("params", {})
     if kind == "xgb_regressor":
         from xgboost import XGBRegressor
-        return XGBRegressor(random_state=42, n_jobs=-1, **params).fit(X, train[TARGET])
+        # "grid_residual": learn finish - grid, so the grid-position baseline is the starting point
+        y = train[TARGET] - _grid(train) if config.get("target") == "grid_residual" else train[TARGET]
+        return XGBRegressor(random_state=42, n_jobs=-1, **params).fit(X, y)
     if kind == "lgbm_lambdarank":
         from lightgbm import LGBMRanker
         ordered = train.sort_values(["season", "round"])
@@ -63,7 +69,9 @@ def fit(config: dict, train: pd.DataFrame):
 def predict_score(model, config: dict, df: pd.DataFrame) -> np.ndarray:
     """Lower score = better predicted finish, for every model type."""
     raw = model.predict(df[config["features"]])
-    return -raw if config["model"] == "lgbm_lambdarank" else raw
+    if config["model"] == "lgbm_lambdarank":
+        return -raw
+    return _grid(df).to_numpy() + raw if config.get("target") == "grid_residual" else raw
 
 
 def predict_rank(model, config: dict, df: pd.DataFrame) -> np.ndarray:
