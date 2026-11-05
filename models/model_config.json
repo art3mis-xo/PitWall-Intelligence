@@ -1,0 +1,39 @@
+{
+  "name": "clean_xgb",
+  "description": "The notebook's 20 features rebuilt from pre-race data only; race weather off. Notebook hyperparameters.",
+  "model": "xgb_regressor",
+  "race_weather": false,
+  "features": [
+    "grid_position",
+    "grid_penalty_places",
+    "had_grid_penalty",
+    "circuit_pos_change_var_hist",
+    "team_avg_finish_last5",
+    "team_avg_finish_last3",
+    "career_starts_at_circuit",
+    "avg_finish_at_circuit",
+    "avg_finish_grid_delta",
+    "teammate_wins",
+    "teammate_losses",
+    "teammate_win_pct",
+    "quali_gap_to_pole",
+    "team_avg_pace_delta",
+    "rolling_avg_pace_delta",
+    "pace_trend",
+    "circuit_wet_race_frequency",
+    "team_id_enc"
+  ],
+  "params": {
+    "objective": "reg:squarederror",
+    "n_estimators": 500,
+    "max_depth": 4,
+    "learning_rate": 0.05,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "min_child_weight": 3,
+    "reg_lambda": 1.5,
+    "reg_alpha": 0.1
+  },
+  "trained_on_rows": 3766,
+  "trained_on_seasons": "2018-2026"
+}
