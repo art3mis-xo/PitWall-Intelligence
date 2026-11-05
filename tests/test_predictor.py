@@ -19,10 +19,10 @@ def test_one_prediction_per_driver(completed):
     assert len(ids) == len(set(ids)) > 0
 
 
-def test_ranks_follow_predicted_position(completed):
+def test_ranks_follow_predicted_score(completed):
     assert [r["predicted_rank"] for r in completed] == list(range(1, len(completed) + 1))
-    positions = [r["predicted_position"] for r in completed]
-    assert positions == sorted(positions)
+    scores = [r["predicted_score"] for r in completed]
+    assert scores == sorted(scores)
 
 
 def test_shap_covers_every_model_feature(completed):
@@ -33,10 +33,10 @@ def test_shap_covers_every_model_feature(completed):
 
 def test_shap_values_add_up_to_prediction(completed):
     # TreeSHAP is exact: base value + sum of contributions = model output.
-    # Tolerance covers rounding (prediction to 2 dp, each SHAP value to 4 dp).
-    base = float(rp.load_explainer().expected_value)
+    # Tolerance covers rounding (score and each SHAP value to 4 dp).
+    base = rp.shap_base_value()
     for r in completed:
-        assert base + sum(r["shap_values"].values()) == pytest.approx(r["predicted_position"], abs=0.01)
+        assert base + sum(r["shap_values"].values()) == pytest.approx(r["predicted_score"], abs=0.01)
 
 
 def test_top_factors_are_largest_by_magnitude(completed):

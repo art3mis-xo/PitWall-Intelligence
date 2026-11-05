@@ -4,7 +4,7 @@ Train the race predictor from data/features.csv.
     python train.py                              # configs/final.json, all seasons
     python train.py --config configs/clean_xgb.json --train-until 2024
 
-Writes models/xgb_race_predictor_final.pkl, models/feature_cols.pkl and
+Writes models/race_predictor.pkl, models/feature_cols.pkl and
 models/model_config.json (the config the model was trained with).
 evals/ scripts import load_dataset / fit / predict_rank from here, so the
 evaluated model and the served model are built the same way.
@@ -92,13 +92,13 @@ def main():
     model = fit(config, train)
 
     MODELS_DIR.mkdir(exist_ok=True)
-    joblib.dump(model, MODELS_DIR / "xgb_race_predictor_final.pkl")
+    joblib.dump(model, MODELS_DIR / "race_predictor.pkl")
     joblib.dump(config["features"], MODELS_DIR / "feature_cols.pkl")
     (MODELS_DIR / "model_config.json").write_text(json.dumps(
         {**config, "trained_on_rows": len(train),
          "trained_on_seasons": f"{train.season.min()}-{train.season.max()}"}, indent=2))
     print(f"Trained {config['name']} on {len(train)} rows ({train.season.min()}-{train.season.max()}) "
-          f"-> models/xgb_race_predictor_final.pkl")
+          f"-> models/race_predictor.pkl")
 
 
 if __name__ == "__main__":

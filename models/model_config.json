@@ -1,7 +1,7 @@
 {
-  "name": "clean_xgb",
-  "description": "The notebook's 20 features rebuilt from pre-race data only; race weather off. Notebook hyperparameters.",
-  "model": "xgb_regressor",
+  "name": "final",
+  "description": "Selected by evals/experiments.py: experiment H18, highest mean Spearman on validation 2025.",
+  "model": "lgbm_lambdarank",
   "race_weather": false,
   "features": [
     "grid_position",
@@ -21,18 +21,25 @@
     "rolling_avg_pace_delta",
     "pace_trend",
     "circuit_wet_race_frequency",
-    "team_id_enc"
+    "team_id_enc",
+    "quali_position",
+    "quali_best_gap_pct",
+    "teammate_quali_delta",
+    "driver_avg_finish_last3",
+    "driver_avg_finish_last5",
+    "driver_points_last5",
+    "driver_dnf_rate_last10",
+    "team_dnf_rate_last10",
+    "circuit_abs_pos_change_hist",
+    "driver_circuit_pos_change_hist"
   ],
   "params": {
-    "objective": "reg:squarederror",
-    "n_estimators": 500,
-    "max_depth": 4,
-    "learning_rate": 0.05,
-    "subsample": 0.85,
-    "colsample_bytree": 0.85,
-    "min_child_weight": 3,
-    "reg_lambda": 1.5,
-    "reg_alpha": 0.1
+    "n_estimators": 200,
+    "learning_rate": 0.02,
+    "num_leaves": 7,
+    "min_child_samples": 40,
+    "colsample_bytree": 1.0,
+    "reg_lambda": 5.0
   },
   "trained_on_rows": 3766,
   "trained_on_seasons": "2018-2026"

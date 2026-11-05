@@ -18,7 +18,7 @@ data/lap_race_results.csv
 data/penalty_cache.json
 
 models/*.pkl
-!models/xgb_race_predictor_final.pkl
+!models/race_predictor.pkl
 !models/feature_cols.pkl
 
 *.log

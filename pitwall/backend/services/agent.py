@@ -86,7 +86,7 @@ def features_for_stats_tool(driver_id: str, metric: str) -> str:
  
         valid_metrics = [
             "avg_finish_at_circuit", "teammate_win_pct", "career_starts_at_circuit",
-            "avg_finish_grid_delta", "rolling_avg_finish_position"
+            "avg_finish_grid_delta", "team_avg_finish_last3"
         ]
         if metric not in valid_metrics:
             return f"Unknown metric. Valid options: {', '.join(valid_metrics)}"

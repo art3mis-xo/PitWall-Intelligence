@@ -15,7 +15,7 @@ export interface DriverPrediction {
   driver_full_name:   string
   team_id:            string
   grid_position:      number | null
-  predicted_position: number
+  predicted_score:    number   // lower = better finish
   predicted_rank:     number
   shap_values:        Record<string, number>
   top_factors:        Array<{
