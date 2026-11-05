@@ -1,6 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 import os
+import unicodedata
 from dotenv import load_dotenv, dotenv_values 
 from .race_predictor import predict_race, load_features, FEATURE_LABELS
 from typing import Annotated
@@ -21,6 +22,32 @@ llm = ChatGroq(
     max_tokens=None,
     api_key=api_key,
 )
+
+def _fold(text: str) -> str:
+    # case- and accent-insensitive: "Räikkönen" == "raikkonen"
+    return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)).casefold().strip()
+
+
+def resolve_driver(text: str) -> tuple[str | None, str]:
+    """Map a driver code ("NOR"), full name ("Lando Norris") or one name ("Norris") to a code.
+
+    Returns (code, "") on a unique match, else (None, message for the LLM)."""
+    drivers = load_features()[["driver_id", "driver_full_name"]].drop_duplicates("driver_id")
+    query = _fold(text)
+    by_code = drivers[drivers["driver_id"].map(_fold) == query]
+    if len(by_code) == 1:
+        return by_code.iloc[0]["driver_id"], ""
+    names = drivers["driver_full_name"].map(_fold)
+    exact = drivers[names == query]
+    words = drivers[names.map(lambda n: all(w in n.split() for w in query.split()))]
+    matches = exact if len(exact) else words
+    if len(matches) == 1:
+        return matches.iloc[0]["driver_id"], ""
+    if len(matches) > 1:
+        options = ", ".join(f"{r.driver_full_name} ({r.driver_id})" for r in matches.itertuples())
+        return None, f"'{text}' matches several drivers: {options}. Ask which one is meant."
+    return None, f"No driver called '{text}' in the dataset (2018 onwards)."
+
 
 def _grid_text(result: dict) -> str:
     if result["grid_position"] is None:
@@ -48,15 +75,16 @@ def race_predictor_tool(season: int, round_num: int) -> str:
 
 @tool
 def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
-    """Explains a specific driver's predicted race result."""
-    try: 
+    """Explains a specific driver's predicted race result.
+    driver_id: three-letter code (e.g. NOR) or the driver's name (e.g. Lando Norris)."""
+    try:
+        code, problem = resolve_driver(driver_id)
+        if code is None:
+            return problem
         results = predict_race(season, round_num)
-        driver_result = next(
-            (r for r in results if r["driver_id"].upper() == driver_id.upper()),
-            None
-        )
+        driver_result = next((r for r in results if r["driver_id"] == code), None)
         if not driver_result:
-            return f"No prediction found for driver {driver_id}"
+            return f"No prediction found for driver {driver_id} ({code}) in {season} Round {round_num}"
  
         factors_text = "\n".join([
             f"  - {f['label']}: value {f['value'] if f['value'] is not None else 'unknown'}"
@@ -83,19 +111,22 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
 
 @tool
 def features_for_stats_tool(driver_id: str, metric: str) -> str:
-    """Returns a requested driver stat feature from the feature store."""
-    # try: 
+    """Returns a requested driver stat feature from the feature store.
+    driver_id: three-letter code (e.g. NOR) or the driver's name (e.g. Lando Norris)."""
+    # try:
     #     features = load_features()
     #     feature_list = "\n".join([f"- {FEATURE_LABELS.get(f, f)}" for f in features])
-    #     return f"Available features for race stats:\n{feature_list}" 
+    #     return f"Available features for race stats:\n{feature_list}"
     # except Exception as e:
     #     return f"Error loading features: {e}"
 
     try:
+        code, problem = resolve_driver(driver_id)
+        if code is None:
+            return problem
         df = load_features()
-        driver_rows = df[df["driver_id"].str.upper() == driver_id.upper()]
-        if driver_rows.empty:
-            return f"No data found for driver {driver_id}"
+        driver_rows = df[df["driver_id"] == code]
+        driver_id = code
  
         valid_metrics = [
             "avg_finish_at_circuit", "teammate_win_pct", "career_starts_at_circuit",

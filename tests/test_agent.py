@@ -1,4 +1,5 @@
 """LangGraph agent: routing and tools, without calling the LLM."""
+import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from pitwall.backend.services import agent
@@ -32,7 +33,28 @@ def test_race_predictor_tool_returns_top_ten():
 
 def test_explain_tool_unknown_driver():
     out = agent.explain_prediction_tool.invoke({"season": 2026, "round_num": 14, "driver_id": "ZZZ"})
-    assert out == "No prediction found for driver ZZZ"
+    assert out.startswith("No driver called 'ZZZ'")
+
+
+@pytest.mark.parametrize("query, code", [
+    ("NOR", "NOR"), ("nor", "NOR"), ("Lando Norris", "NOR"), ("Norris", "NOR"),
+    ("Raikkonen", "RAI"),   # accent-insensitive: Räikkönen
+])
+def test_resolve_driver_by_code_or_name(query, code):
+    assert agent.resolve_driver(query) == (code, "")
+
+
+def test_resolve_driver_asks_when_ambiguous():
+    code, message = agent.resolve_driver("Kimi")
+    assert code is None
+    assert "RAI" in message and "ANT" in message
+
+
+def test_stats_tool_accepts_a_driver_name():
+    # Regression: "Lando Norris" used to return "No data found"
+    by_name = agent.features_for_stats_tool.invoke({"driver_id": "Lando Norris", "metric": "teammate_win_pct"})
+    by_code = agent.features_for_stats_tool.invoke({"driver_id": "NOR", "metric": "teammate_win_pct"})
+    assert by_name == by_code and by_name.startswith("NOR")
 
 
 def test_stats_tool_rejects_unknown_metric():
