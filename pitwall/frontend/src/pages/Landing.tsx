@@ -153,13 +153,13 @@ export default function Landing() {
             </h1>
             <p className="text-gray-400 text-base max-w-lg leading-relaxed">
               AI-powered predictions, SHAP-grounded explanations, and live
-              championship data — powered by XGBoost and Groq.
+              championship data — powered by LightGBM and Groq.
             </p>
             <div className="flex gap-6 mt-6">
               {[
                 ['3.8k', 'Driver-race rows'],
                 ['187',  'Races since 2018'],
-                ['20',   'Model features'],
+                ['28',   'Pre-race features'],
               ].map(([val, label]) => (
                 <div key={label}>
                   <div className={`text-2xl font-bold ${
@@ -349,7 +349,7 @@ export default function Landing() {
             </button>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-800 rounded-xl p-3 text-center">
-                <div className="text-lg font-bold text-green-400">20</div>
+                <div className="text-lg font-bold text-green-400">28</div>
                 <div className="text-xs text-gray-600">Features</div>
               </div>
               <div className="bg-gray-800 rounded-xl p-3 text-center">
@@ -408,7 +408,7 @@ export default function Landing() {
       <footer className="border-t border-gray-800 bg-gray-900 mt-4">
         <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-4 gap-6">
           {[
-            ['XGBoost',       'Prediction model'],
+            ['LightGBM',      'Prediction model'],
             ['Groq model',    'Agent backbone'],
             ['LangGraph',     'Orchestration'],
             ['Groq',          'Inference engine'],

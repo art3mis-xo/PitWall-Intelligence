@@ -134,7 +134,7 @@ export default function Predict() {
             {nextRace ? `${nextRace.name} ${nextRace.season}` : 'Upcoming race'}
           </h1>
           <p className="text-gray-500 mt-1 text-sm">
-            XGBoost ·
+            LightGBM ranker ·
             Click a driver to see SHAP explanation
           </p>
         </div>
