@@ -15,3 +15,9 @@ from pitwall.backend.main import app
 def client():
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture(autouse=True)
+def fresh_rate_limits():
+    from pitwall.backend.services.rate_limit import limiter
+    limiter.reset()

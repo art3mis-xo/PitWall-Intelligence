@@ -1,14 +1,25 @@
 # routers/telemetry.py
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Optional
 import json
+import os
 import fastf1.plotting
 import plotly.graph_objects as go
 from ..services import FastF1Service
 from ..services.fastf1_services import DataNotLoadedError
 import pandas as pd
 
-router = APIRouter(prefix="/api/telemetry", tags=["Telemetry"])
+TELEMETRY_DISABLED = ("Race telemetry is not available on this deployment: F1 timing data now requires "
+                      "an F1TV login. Run PitWall locally with a populated FastF1 cache to see these charts.")
+
+
+def require_telemetry():
+    # Off on the public deployment (TELEMETRY_ENABLED=false); on by default locally
+    if os.getenv("TELEMETRY_ENABLED", "true").lower() == "false":
+        raise HTTPException(status_code=503, detail=TELEMETRY_DISABLED)
+
+
+router = APIRouter(prefix="/api/telemetry", tags=["Telemetry"], dependencies=[Depends(require_telemetry)])
 f1_service = FastF1Service()
 
 # FastF1 raises DataNotLoadedError when F1 live timing has no data for a session

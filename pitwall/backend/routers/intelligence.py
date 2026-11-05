@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import re
 from ..services.agent     import chat, chat_stream
 from ..services.race_predictor import predict_race, load_features
 from ..services.news      import get_f1_news
+from ..services.rate_limit import GroqLimitExceeded, client_ip, limiter
 
 router = APIRouter(prefix="/api/intelligence", tags=["Intelligence"])
 
@@ -28,7 +29,11 @@ class ChatRequest(BaseModel):
 
 
 @router.post("/chat")
-async def chat_endpoint(req: ChatRequest):
+async def chat_endpoint(req: ChatRequest, request: Request):
+    try:
+        limiter.check(client_ip(request))
+    except GroqLimitExceeded as e:
+        raise HTTPException(status_code=429, detail=str(e))
     try:
         if req.stream:
             async def generate():
@@ -43,7 +48,7 @@ async def chat_endpoint(req: ChatRequest):
 
 
 @router.get("/explain/{season}/{round_num}/{driver_id}")
-async def explain_endpoint(season: int, round_num: int, driver_id: str):
+async def explain_endpoint(season: int, round_num: int, driver_id: str, request: Request):
     try:
         predictions   = predict_race(season, round_num)
         driver_result = next(
@@ -54,6 +59,7 @@ async def explain_endpoint(season: int, round_num: int, driver_id: str):
             raise HTTPException(status_code=404, detail=f"Driver {driver_id} not found")
 
         try:
+            limiter.check(client_ip(request))
             narrative = await chat(
                 f"Explain the prediction for {driver_result['driver_full_name']} "
                 f"predicted P{driver_result['predicted_rank']} in {season} Round {round_num}. "
@@ -66,6 +72,9 @@ async def explain_endpoint(season: int, round_num: int, driver_id: str):
                 "and a final explanation grounded in the supplied values."
             )
             narrative = ground_narrative(narrative, driver_result["grid_position"])
+        except GroqLimitExceeded as e:
+            # The SHAP factors below don't need Groq, so the endpoint still answers
+            narrative = f"{e} The factors below come straight from the model."
         except Exception:
             narrative = (
                 "Explanation service is unavailable. "
