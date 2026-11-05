@@ -68,7 +68,7 @@ def meta(command: str, df: pd.DataFrame, **extra) -> dict:
     import xgboost
     return {
         "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "git_commit": git_commit(["evals", "train.py", "2Feature_engineering.py", "configs", "data"]),
+        "git_commit": git_commit(["evals/*.py", "train.py", "2Feature_engineering.py", "configs", "data"]),
         "command": command,
         "libraries": {"xgboost": xgboost.__version__, "lightgbm": lightgbm.__version__},
         "dataset": {"file": "data/features.csv", "rows": len(df),
