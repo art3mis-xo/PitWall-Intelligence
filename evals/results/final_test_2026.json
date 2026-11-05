@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "date": "2026-11-05T06:03:11+00:00",
+    "git_commit": "5bac3c457fe85333da11c0872f7e215264978e10",
+    "command": "python evals/final_test.py",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "protocol": "train 2018-2025, evaluate 2026 once",
+    "train_rows": 3458,
+    "test_rows": 308,
+    "note": "Selection used 2025 only. 2026 was seen once before, in evals/backtest_audit.py, with the old leaky/leak-removed notebook features, before any of these choices were made."
+  },
+  "results": [
+    {
+      "model": "Grid-position baseline (finish = grid)",
+      "n_races": 14,
+      "spearman_mean": 0.65,
+      "spearman_std": 0.182,
+      "top10_mean": 0.75,
+      "top10_std": 0.116,
+      "mae_mean": 3.403,
+      "mae_std": 1.126,
+      "ndcg10_mean": 0.855,
+      "ndcg10_std": 0.085
+    },
+    {
+      "model": "Final model: Selected by evals/experiments.py: experiment H18, highest mean Spearman on validation 2025.",
+      "config": "configs/final.json",
+      "n_features": 28,
+      "per_race": [
+        {
+          "season": 2026,
+          "round": 1,
+          "spearman": 0.4647092038396387,
+          "top10": 0.7,
+          "mae": 4.363636363636363,
+          "ndcg10": 0.8349741676367782
+        },
+        {
+          "season": 2026,
+          "round": 2,
+          "spearman": 0.5776397515527951,
+          "top10": 0.7,
+          "mae": 4.2727272727272725,
+          "ndcg10": 0.847172348782768
+        },
+        {
+          "season": 2026,
+          "round": 3,
+          "spearman": 0.9017504234895539,
+          "top10": 0.8,
+          "mae": 2.272727272727273,
+          "ndcg10": 0.9543840766904157
+        },
+        {
+          "season": 2026,
+          "round": 4,
+          "spearman": 0.6555618294748731,
+          "top10": 0.8,
+          "mae": 4.0,
+          "ndcg10": 0.8967537767585336
+        },
+        {
+          "season": 2026,
+          "round": 5,
+          "spearman": 0.41614906832298143,
+          "top10": 0.6,
+          "mae": 5.090909090909091,
+          "ndcg10": 0.6530007775725648
+        },
+        {
+          "season": 2026,
+          "round": 6,
+          "spearman": 0.27724449463579903,
+          "top10": 0.6,
+          "mae": 6.090909090909091,
+          "ndcg10": 0.6481519357371586
+        },
+        {
+          "season": 2026,
+          "round": 7,
+          "spearman": 0.7221908526256353,
+          "top10": 0.7,
+          "mae": 3.1818181818181817,
+          "ndcg10": 0.8389069145736192
+        },
+        {
+          "season": 2026,
+          "round": 8,
+          "spearman": 0.935629587803501,
+          "top10": 0.9,
+          "mae": 1.8181818181818181,
+          "ndcg10": 0.9753049535359113
+        },
+        {
+          "season": 2026,
+          "round": 9,
+          "spearman": 0.6284584980237156,
+          "top10": 0.7,
+          "mae": 3.727272727272727,
+          "ndcg10": 0.7964545682738401
+        },
+        {
+          "season": 2026,
+          "round": 10,
+          "spearman": 0.7334839073969509,
+          "top10": 0.8,
+          "mae": 2.8181818181818183,
+          "ndcg10": 0.8826347244918558
+        },
+        {
+          "season": 2026,
+          "round": 11,
+          "spearman": 0.7978543195934501,
+          "top10": 0.9,
+          "mae": 2.4545454545454546,
+          "ndcg10": 0.9315337739771787
+        },
+        {
+          "season": 2026,
+          "round": 12,
+          "spearman": 0.7820440429136083,
+          "top10": 0.7,
+          "mae": 2.727272727272727,
+          "ndcg10": 0.9149446272830164
+        },
+        {
+          "season": 2026,
+          "round": 13,
+          "spearman": 0.6962168266516093,
+          "top10": 0.9,
+          "mae": 3.0,
+          "ndcg10": 0.8803046137348638
+        },
+        {
+          "season": 2026,
+          "round": 14,
+          "spearman": 0.743647656691135,
+          "top10": 0.9,
+          "mae": 2.6363636363636362,
+          "ndcg10": 0.9169940427979922
+        }
+      ],
+      "n_races": 14,
+      "spearman_mean": 0.667,
+      "spearman_std": 0.183,
+      "top10_mean": 0.764,
+      "top10_std": 0.108,
+      "mae_mean": 3.461,
+      "mae_std": 1.191,
+      "ndcg10_mean": 0.855,
+      "ndcg10_std": 0.099,
+      "races_beating_baseline_spearman": 7
+    },
+    {
+      "model": "XGBoost, leak-free notebook features (reference, not tuned)",
+      "config": "configs/clean_xgb.json",
+      "n_features": 18,
+      "per_race": [
+        {
+          "season": 2026,
+          "round": 1,
+          "spearman": 0.5335968379446642,
+          "top10": 0.7,
+          "mae": 4.2727272727272725,
+          "ndcg10": 0.8044351678042599
+        },
+        {
+          "season": 2026,
+          "round": 2,
+          "spearman": 0.48390739695087526,
+          "top10": 0.7,
+          "mae": 4.909090909090909,
+          "ndcg10": 0.8299534115418944
+        },
+        {
+          "season": 2026,
+          "round": 3,
+          "spearman": 0.8870694522868439,
+          "top10": 0.9,
+          "mae": 2.272727272727273,
+          "ndcg10": 0.9639056211727167
+        },
+        {
+          "season": 2026,
+          "round": 4,
+          "spearman": 0.7278373800112932,
+          "top10": 0.8,
+          "mae": 3.909090909090909,
+          "ndcg10": 0.9225855787649164
+        },
+        {
+          "season": 2026,
+          "round": 5,
+          "spearman": 0.43647656691134956,
+          "top10": 0.6,
+          "mae": 5.090909090909091,
+          "ndcg10": 0.7406993120214637
+        },
+        {
+          "season": 2026,
+          "round": 6,
+          "spearman": 0.3077357425183513,
+          "top10": 0.6,
+          "mae": 5.636363636363637,
+          "ndcg10": 0.7365211969286375
+        },
+        {
+          "season": 2026,
+          "round": 7,
+          "spearman": 0.6781479390175044,
+          "top10": 0.8,
+          "mae": 3.4545454545454546,
+          "ndcg10": 0.8021323139587581
+        },
+        {
+          "season": 2026,
+          "round": 8,
+          "spearman": 0.9514398644833428,
+          "top10": 0.9,
+          "mae": 1.5454545454545454,
+          "ndcg10": 0.9757179225333307
+        },
+        {
+          "season": 2026,
+          "round": 9,
+          "spearman": 0.4748729531338228,
+          "top10": 0.7,
+          "mae": 5.0,
+          "ndcg10": 0.7634326189337325
+        },
+        {
+          "season": 2026,
+          "round": 10,
+          "spearman": 0.7662337662337665,
+          "top10": 0.9,
+          "mae": 2.3636363636363638,
+          "ndcg10": 0.917105612319726
+        },
+        {
+          "season": 2026,
+          "round": 11,
+          "spearman": 0.7267080745341615,
+          "top10": 0.9,
+          "mae": 2.8181818181818183,
+          "ndcg10": 0.9034807654081072
+        },
+        {
+          "season": 2026,
+          "round": 12,
+          "spearman": 0.6905702992659515,
+          "top10": 0.7,
+          "mae": 3.272727272727273,
+          "ndcg10": 0.898424204084338
+        },
+        {
+          "season": 2026,
+          "round": 13,
+          "spearman": 0.7843026538678713,
+          "top10": 0.8,
+          "mae": 2.5454545454545454,
+          "ndcg10": 0.9246268930525936
+        },
+        {
+          "season": 2026,
+          "round": 14,
+          "spearman": 0.779785431959345,
+          "top10": 0.8,
+          "mae": 2.4545454545454546,
+          "ndcg10": 0.9270699769554175
+        }
+      ],
+      "n_races": 14,
+      "spearman_mean": 0.659,
+      "spearman_std": 0.185,
+      "top10_mean": 0.771,
+      "top10_std": 0.107,
+      "mae_mean": 3.539,
+      "mae_std": 1.277,
+      "ndcg10_mean": 0.865,
+      "ndcg10_std": 0.083,
+      "races_beating_baseline_spearman": 7
+    }
+  ]
+}
