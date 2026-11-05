@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "date": "2026-11-05T06:00:15+00:00",
+    "git_commit": "8d1f0263b03b07cb3b149b31b5cc9b90eb6c6934",
+    "command": "python evals/backtest_clean.py",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "protocol": "train 2018-2024, evaluate 2025 (validation)",
+    "train_rows": 2979,
+    "eval_rows": 479
+  },
+  "results": [
+    {
+      "model": "Grid-position baseline (finish = grid)",
+      "n_races": 24,
+      "spearman_mean": 0.651,
+      "spearman_std": 0.207,
+      "top10_mean": 0.779,
+      "top10_std": 0.128,
+      "mae_mean": 3.344,
+      "mae_std": 1.124,
+      "ndcg10_mean": 0.905,
+      "ndcg10_std": 0.076
+    },
+    {
+      "model": "XGBoost clean, 18 features",
+      "config": "configs/clean_xgb.json",
+      "race_weather": false,
+      "features": [
+        "grid_position",
+        "grid_penalty_places",
+        "had_grid_penalty",
+        "circuit_pos_change_var_hist",
+        "team_avg_finish_last5",
+        "team_avg_finish_last3",
+        "career_starts_at_circuit",
+        "avg_finish_at_circuit",
+        "avg_finish_grid_delta",
+        "teammate_wins",
+        "teammate_losses",
+        "teammate_win_pct",
+        "quali_gap_to_pole",
+        "team_avg_pace_delta",
+        "rolling_avg_pace_delta",
+        "pace_trend",
+        "circuit_wet_race_frequency",
+        "team_id_enc"
+      ],
+      "n_races": 24,
+      "spearman_mean": 0.615,
+      "spearman_std": 0.24,
+      "top10_mean": 0.746,
+      "top10_std": 0.138,
+      "mae_mean": 3.72,
+      "mae_std": 1.198,
+      "ndcg10_mean": 0.887,
+      "ndcg10_std": 0.084,
+      "races_beating_baseline_spearman": 8
+    },
+    {
+      "model": "XGBoost clean, 20 features (+ race weather)",
+      "config": "configs/clean_xgb.json",
+      "race_weather": true,
+      "features": [
+        "grid_position",
+        "grid_penalty_places",
+        "had_grid_penalty",
+        "circuit_pos_change_var_hist",
+        "team_avg_finish_last5",
+        "team_avg_finish_last3",
+        "career_starts_at_circuit",
+        "avg_finish_at_circuit",
+        "avg_finish_grid_delta",
+        "teammate_wins",
+        "teammate_losses",
+        "teammate_win_pct",
+        "quali_gap_to_pole",
+        "team_avg_pace_delta",
+        "rolling_avg_pace_delta",
+        "pace_trend",
+        "circuit_wet_race_frequency",
+        "team_id_enc",
+        "race_avg_air_temp",
+        "race_avg_track_temp"
+      ],
+      "n_races": 24,
+      "spearman_mean": 0.625,
+      "spearman_std": 0.226,
+      "top10_mean": 0.75,
+      "top10_std": 0.138,
+      "mae_mean": 3.64,
+      "mae_std": 1.186,
+      "ndcg10_mean": 0.887,
+      "ndcg10_std": 0.092,
+      "races_beating_baseline_spearman": 9
+    }
+  ]
+}
