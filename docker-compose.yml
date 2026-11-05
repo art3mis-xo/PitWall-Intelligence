@@ -1,0 +1,25 @@
+# Run the deployed setup locally:  docker compose up --build
+# Dashboard: http://localhost:${WEB_PORT:-8080}   API: http://localhost:${API_PORT:-8000}
+# GROQ_API_KEY is read from .env (see .env.example).
+services:
+  api:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      CORS_ORIGINS: http://localhost:${WEB_PORT:-8080}
+      TELEMETRY_ENABLED: "false"
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+  web:
+    build:
+      context: pitwall/frontend
+      args:
+        VITE_API_URL: http://localhost:${API_PORT:-8000}
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
