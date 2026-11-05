@@ -1,233 +1,176 @@
 """
 Phase 2: Feature Engineering
-Reads:  data/driver_race_results.csv   (output of 1Build_dataset_base.py)
-Writes: data/features.csv              (input to Phase 3 modeling)
+Reads:  data/driver_race_results.csv   (output of 1Build_dataset_base.py + add_grid_penalties.py)
+Writes: data/features.csv              (input to train.py)
 
 Run order:
   1. 1Build_dataset_base.py
-  2. add_grid_penalties.py   (or run the penalty cells inline — same logic)
+  2. add_grid_penalties.py
   3. this file
 
-All features are derived from the base CSV + Jolpica API (penalties).
-No lap-level FastF1 data is needed here — that comes in Phase 3 (FP2 pace).
+Every feature for race t is built only from information available before race t
+starts: qualifying and the starting grid of race t, and results of races before t.
+tests/test_features_no_leak.py checks this by changing the results of one race and
+asserting no feature of that race or any earlier race moves.
 """
 
-import pandas as pd
-import numpy as np
-import requests
-import time
 import json
+import time
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
+import requests
+
 # ── paths ────────────────────────────────────────────────────────────────────
-DATA_DIR   = Path("./data")
+DATA_DIR   = Path(__file__).resolve().parent / "data"
 INPUT_CSV  = DATA_DIR / "driver_race_results.csv"
 OUTPUT_CSV = DATA_DIR / "features.csv"
 CACHE_FILE = DATA_DIR / "penalty_cache.json"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# LOAD
-# ─────────────────────────────────────────────────────────────────────────────
-df = pd.read_csv(INPUT_CSV)
-df["q1_time"] = pd.to_timedelta(df["q1_time"])
-df["q2_time"] = pd.to_timedelta(df["q2_time"])
-df["q3_time"] = pd.to_timedelta(df["q3_time"])
-print(f"Loaded {len(df)} rows")
+RACE_KEYS = ["season", "round"]
+FINISHED_STATUSES = {"Finished", "Lapped"}   # plus "+N Lap(s)", see is_dnf()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 1: overtaking_difficulty  (var_delta_i_norm)
-# Variance of normalised grid-to-finish delta per race.
-# High variance = easy to overtake. Low = Monaco-style processional.
+# HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
-df["delta_i"] = df["finish_position"] - df["grid_position"]
-
-drivers_per_race = (
-    df.groupby(["season", "round", "circuit_id"])["driver_id"]
-      .count()
-      .reset_index(name="drivers_count")
-)
-df2 = df.merge(drivers_per_race, on=["season", "circuit_id", "round"], how="left")
-df2["delta_i_norm"] = df2["delta_i"] / df2["drivers_count"]
-
-race_variance = (
-    df2.groupby(["season", "round", "circuit_id"])["delta_i_norm"]
-       .var()
-       .reset_index(name="var_delta_i_norm")
-)
-df = df.merge(race_variance, on=["season", "round", "circuit_id"], how="left")
-print(f"[1] overtaking_difficulty (var_delta_i_norm) — nulls: {df['var_delta_i_norm'].isna().sum()}")
+def load_base(path: Path = INPUT_CSV) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    for col in ["q1_time", "q2_time", "q3_time"]:
+        df[col] = pd.to_timedelta(df[col])
+    return df
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 2: team pace — quali-based (full 2018-2025 coverage)
-# Uses quali_gap_to_pole as the pace proxy since it covers all seasons
-# unlike the df_laps lap-time approach which only had 2018-2022.
-# NOTE: quali_gap_to_pole is computed in Feature 7 below.
-# This section is intentionally placed AFTER Feature 7 in the .py.
-# In the notebook they were separate sections; here we reorder for correctness.
-# ─────────────────────────────────────────────────────────────────────────────
-# (computed after quali_gap_to_pole is available — see after Feature 7)
+def is_dnf(status: pd.Series) -> pd.Series:
+    finished = status.isin(FINISHED_STATUSES) | status.fillna("").str.match(r"^\+\d+ Laps?$")
+    return (~finished).astype(float)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 3: rolling team finishing position
-# ─────────────────────────────────────────────────────────────────────────────
-df_avg_finish = (
-    df.groupby(["season", "round", "team_id"])["finish_position"]
-      .mean()
-      .reset_index(name="avg_team_finish_position")
-      .sort_values(["team_id", "season", "round"])
-)
-df_avg_finish["rolling_avg_finish_position"] = (
-    df_avg_finish.groupby("team_id")["avg_team_finish_position"]
-                 .transform(lambda x: x.rolling(window=3, min_periods=1).mean())
-)
-df = df.merge(
-    df_avg_finish[["season", "round", "team_id", "avg_team_finish_position", "rolling_avg_finish_position"]],
-    on=["season", "round", "team_id"], how="left"
-)
-print(f"[3] rolling team finish — nulls: {df['rolling_avg_finish_position'].isna().sum()}")
+def past_rolling(df: pd.DataFrame, by, col: str, window: int | None) -> pd.Series:
+    """Mean of `col` over earlier rows of the same group (rows sorted by season, round).
+
+    shift(1) drops the current row, so race t only sees races before t.
+    window=None means all earlier rows (expanding)."""
+    ordered = df.sort_values(RACE_KEYS)
+    shifted = ordered.groupby(by)[col].shift(1)
+    grouped = shifted.groupby([ordered[b] for b in ([by] if isinstance(by, str) else by)])
+    if window is None:
+        out = grouped.transform(lambda x: x.expanding().mean())
+    else:
+        out = grouped.transform(lambda x: x.rolling(window, min_periods=1).mean())
+    return out.reindex(df.index)
+
+
+def per_race_level(df: pd.DataFrame, level_keys: list[str], values: dict) -> pd.DataFrame:
+    """Aggregate to one row per (race, level) e.g. per team-race or per race."""
+    return df.groupby(RACE_KEYS + level_keys, as_index=False).agg(**values)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 4: driver circuit history
-# career_starts_at_circuit, avg_finish_at_circuit
+# FEATURES
 # ─────────────────────────────────────────────────────────────────────────────
-df_sorted = df.sort_values(["driver_id", "circuit_id", "season", "round"])
+def build_features(base: pd.DataFrame) -> pd.DataFrame:
+    df = base.copy()
+    df["dnf"] = is_dnf(df["classified_status"])
+    field_size = df.groupby(RACE_KEYS)["driver_id"].transform("count")
 
-df["career_starts_at_circuit"] = (
-    df_sorted.groupby(["driver_id", "circuit_id"]).cumcount()  # 0-indexed count before this race
-)
+    # ── starting grid ─────────────────────────────────────────────────────────
+    # FastF1 reports a pit-lane start as grid 0; it starts behind everyone.
+    df["pit_lane_start"] = (df["grid_position"] == 0).astype(int)
+    df.loc[df["grid_position"] == 0, "grid_position"] = field_size
+    df["finish_grid_delta"] = df["finish_position"] - df["grid_position"]
 
-df["avg_finish_at_circuit"] = (
-    df_sorted.groupby(["driver_id", "circuit_id"])["finish_position"]
-             .transform(lambda x: x.shift(1).expanding().mean())
-)
-print(f"[4] driver circuit history — avg_finish nulls: {df['avg_finish_at_circuit'].isna().sum()}")
+    # ── qualifying (known before the race) ────────────────────────────────────
+    # quali_position: furthest session reached first, then lap time within it.
+    stage = np.select([df["q3_time"].notna(), df["q2_time"].notna(), df["q1_time"].notna()], [3, 2, 1], 0)
+    stage_time = df["q3_time"].where(stage == 3, df["q2_time"].where(stage == 2, df["q1_time"]))
+    df["_quali_key"] = -stage * 1e6 + stage_time.dt.total_seconds().fillna(1e5)
+    df["quali_position"] = df.groupby(RACE_KEYS)["_quali_key"].rank(method="first")
 
+    best_lap = df[["q1_time", "q2_time", "q3_time"]].min(axis=1).dt.total_seconds()
+    pole_best = best_lap.groupby([df["season"], df["round"]]).transform("min")
+    df["quali_best_gap_pct"] = (best_lap - pole_best) / pole_best * 100
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 5: quali-to-race delta (finish_grid_delta, avg_finish_grid_delta)
-# ─────────────────────────────────────────────────────────────────────────────
-df["finish_grid_delta"] = df["finish_position"] - df["grid_position"]
+    pole_q3 = df["q3_time"].groupby([df["season"], df["round"]]).transform("min")
+    df["quali_gap_to_pole"] = (df["q3_time"] - pole_q3).dt.total_seconds()
 
-df_sorted2 = df.sort_values(["driver_id", "season", "round"])
-df["avg_finish_grid_delta"] = (
-    df_sorted2.groupby("driver_id")["finish_grid_delta"]
-              .transform(lambda x: x.shift(1).expanding().mean())
-)
-print(f"[5] quali-to-race delta — avg nulls: {df['avg_finish_grid_delta'].isna().sum()}")
+    team_quali = df.groupby(RACE_KEYS + ["team_id"])["quali_position"]
+    teammate_quali = (team_quali.transform("sum") - df["quali_position"]).where(team_quali.transform("count") == 2)
+    df["teammate_quali_delta"] = df["quali_position"] - teammate_quali
 
+    # team quali pace: this race's quali (pre-race), plus a 3-race rolling mean and slope
+    def rolling_slope(x):
+        y = x.values
+        if len(y) < 2:
+            return np.nan
+        return np.polyfit(np.arange(len(y)), y, 1)[0]
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 6: teammate head-to-head
-# teammate_wins, teammate_losses, teammate_win_pct
-# ─────────────────────────────────────────────────────────────────────────────
-def teammate_result(group):
-    group = group.sort_values("finish_position")
-    if len(group) < 2:
-        return None
-    winner = group.iloc[0]["driver_id"]
-    loser  = group.iloc[1]["driver_id"]
-    margin = group.iloc[1]["finish_position"] - group.iloc[0]["finish_position"]
-    return pd.DataFrame({
-        "season":   [group.iloc[0]["season"]],
-        "round":    [group.iloc[0]["round"]],
-        "team_id":  [group.iloc[0]["team_id"]],
-        "winner":   [winner],
-        "loser":    [loser],
-        "margin":   [margin],
-    })
+    team_pace = (per_race_level(df, ["team_id"], {"team_avg_pace_delta": ("quali_gap_to_pole", "mean")})
+                 .sort_values(["team_id"] + RACE_KEYS))
+    team_pace["rolling_avg_pace_delta"] = (team_pace.groupby("team_id")["team_avg_pace_delta"]
+                                           .transform(lambda x: x.rolling(window=3, min_periods=1).mean()))
+    team_pace["pace_trend"] = (team_pace.groupby("team_id")["team_avg_pace_delta"]
+                               .transform(lambda x: x.rolling(window=3, min_periods=2).apply(rolling_slope, raw=False)))
+    df = df.merge(team_pace, on=RACE_KEYS + ["team_id"], how="left")
 
-# group_keys=False prevents pandas from adding group keys to the index
-results = (
-    df.groupby(["season", "round", "team_id"], group_keys=False)
-      .apply(teammate_result)
-      .dropna()
-      .reset_index(drop=True)
-)
+    # ── driver form (previous races only) ─────────────────────────────────────
+    df["driver_avg_finish_last3"] = past_rolling(df, "driver_id", "finish_position", 3)
+    df["driver_avg_finish_last5"] = past_rolling(df, "driver_id", "finish_position", 5)
+    df["driver_points_last5"]     = past_rolling(df, "driver_id", "points", 5)
+    df["driver_dnf_rate_last10"]  = past_rolling(df, "driver_id", "dnf", 10)
+    df["avg_finish_grid_delta"]   = past_rolling(df, "driver_id", "finish_grid_delta", None)
 
-wins   = results.groupby("winner").size().reset_index(name="teammate_wins")
-losses = results.groupby("loser").size().reset_index(name="teammate_losses")
+    # ── team form (previous races only) ───────────────────────────────────────
+    team_race = per_race_level(df, ["team_id"], {"team_finish": ("finish_position", "mean"),
+                                                 "team_dnf": ("dnf", "mean")})
+    team_race["team_avg_finish_last3"] = past_rolling(team_race, "team_id", "team_finish", 3)
+    team_race["team_avg_finish_last5"] = past_rolling(team_race, "team_id", "team_finish", 5)
+    team_race["team_dnf_rate_last10"]  = past_rolling(team_race, "team_id", "team_dnf", 10)
+    df = df.merge(team_race.drop(columns=["team_finish", "team_dnf"]), on=RACE_KEYS + ["team_id"], how="left")
 
-driver_h2h = pd.merge(wins, losses, left_on="winner", right_on="loser", how="outer")
-driver_h2h = driver_h2h.rename(columns={"winner": "driver_id"}).fillna(0)
-driver_h2h["teammate_win_pct"] = (
-    driver_h2h["teammate_wins"] / (driver_h2h["teammate_wins"] + driver_h2h["teammate_losses"])
-)
+    # ── teammate head-to-head (previous races only) ───────────────────────────
+    def teammate_result(group):
+        group = group.sort_values("finish_position")
+        if len(group) < 2:
+            return None
+        return pd.DataFrame({"winner": [group.iloc[0]["driver_id"]], "loser": [group.iloc[1]["driver_id"]]})
 
-df = df.merge(
-    driver_h2h[["driver_id", "teammate_wins", "teammate_losses", "teammate_win_pct"]],
-    on="driver_id", how="left"
-)
-print(f"[6] teammate H2H — nulls: {df['teammate_win_pct'].isna().sum()}")
+    h2h = (df.groupby(RACE_KEYS + ["team_id"], group_keys=True)[["driver_id", "finish_position"]]
+             .apply(teammate_result).reset_index(level=RACE_KEYS))
+    wins   = h2h.groupby(RACE_KEYS + ["winner"]).size().rename("win").rename_axis(RACE_KEYS + ["driver_id"])
+    losses = h2h.groupby(RACE_KEYS + ["loser"]).size().rename("loss").rename_axis(RACE_KEYS + ["driver_id"])
+    df = df.join(wins, on=RACE_KEYS + ["driver_id"]).join(losses, on=RACE_KEYS + ["driver_id"])
+    df[["win", "loss"]] = df[["win", "loss"]].fillna(0)
+    ordered = df.sort_values(RACE_KEYS)
+    for col, out in [("win", "teammate_wins"), ("loss", "teammate_losses")]:
+        df[out] = ordered.groupby("driver_id")[col].transform(lambda x: x.cumsum().shift(1, fill_value=0)).reindex(df.index)
+    h2h_total = df["teammate_wins"] + df["teammate_losses"]
+    df["teammate_win_pct"] = (df["teammate_wins"] / h2h_total).where(h2h_total > 0)
 
+    # ── driver history at this circuit (previous visits only) ─────────────────
+    df["career_starts_at_circuit"] = df.sort_values(RACE_KEYS).groupby(["driver_id", "circuit_id"]).cumcount().reindex(df.index)
+    df["avg_finish_at_circuit"] = past_rolling(df, ["driver_id", "circuit_id"], "finish_position", None)
+    df["driver_circuit_pos_change_hist"] = past_rolling(df, ["driver_id", "circuit_id"], "finish_grid_delta", None)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 7: quali gap to pole
-# ─────────────────────────────────────────────────────────────────────────────
-pole_times = (
-    df.dropna(subset=["q3_time"])
-      .groupby(["season", "round"])["q3_time"]
-      .min()
-      .rename("pole_q3_time")
-)
-df = df.join(pole_times, on=["season", "round"])
-df["quali_gap_to_pole"] = (
-    df["q3_time"] - df["pole_q3_time"]
-).dt.total_seconds()
-print(f"[7] quali_gap_to_pole — nulls: {df['quali_gap_to_pole'].isna().sum()} (expected: drivers elim in Q1/Q2)")
+    # ── circuit character (previous races at this circuit only) ───────────────
+    df["_delta_norm"] = df["finish_grid_delta"] / field_size
+    race_level = per_race_level(df, ["circuit_id"], {"pos_change_var": ("_delta_norm", "var"),
+                                                     "abs_pos_change": ("finish_grid_delta", lambda s: s.abs().mean()),
+                                                     "rain": ("race_had_rain", "max")})
+    race_level["rain"] = race_level["rain"].astype(float)
+    race_level["circuit_pos_change_var_hist"] = past_rolling(race_level, "circuit_id", "pos_change_var", None)
+    race_level["circuit_abs_pos_change_hist"] = past_rolling(race_level, "circuit_id", "abs_pos_change", None)
+    race_level["circuit_wet_race_frequency"]  = past_rolling(race_level, "circuit_id", "rain", None)
+    df = df.merge(race_level[RACE_KEYS + ["circuit_id", "circuit_pos_change_var_hist",
+                                          "circuit_abs_pos_change_hist", "circuit_wet_race_frequency"]],
+                  on=RACE_KEYS + ["circuit_id"], how="left")
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 2 (continued): team pace delta — quali-based, full coverage
-# Placed here because it depends on quali_gap_to_pole (Feature 7)
-# ─────────────────────────────────────────────────────────────────────────────
-def rolling_slope(x):
-    y = x.values
-    if len(y) < 2:
-        return np.nan
-    return np.polyfit(np.arange(len(y)), y, 1)[0]
-
-team_pace = (
-    df.groupby(["season", "round", "team_id"])["quali_gap_to_pole"]
-      .mean()
-      .reset_index(name="team_avg_pace_delta")
-      .sort_values(["team_id", "season", "round"])
-)
-team_pace["rolling_avg_pace_delta"] = (
-    team_pace.groupby("team_id")["team_avg_pace_delta"]
-             .transform(lambda x: x.rolling(window=3, min_periods=1).mean())
-)
-team_pace["pace_trend"] = (
-    team_pace.groupby("team_id")["team_avg_pace_delta"]
-             .transform(lambda x: x.rolling(window=3, min_periods=2).apply(rolling_slope, raw=False))
-)
-
-df = df.merge(
-    team_pace[["season", "round", "team_id", "team_avg_pace_delta", "rolling_avg_pace_delta", "pace_trend"]],
-    on=["season", "round", "team_id"], how="left"
-)
-print(f"[2] team pace delta — nulls: team_avg={df['team_avg_pace_delta'].isna().sum()}, "
-      f"rolling={df['rolling_avg_pace_delta'].isna().sum()}, trend={df['pace_trend'].isna().sum()}")
+    return df.drop(columns=["dnf", "finish_grid_delta", "_quali_key", "_delta_norm", "win", "loss"])
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 8: circuit wet race frequency
-# ─────────────────────────────────────────────────────────────────────────────
-wet_freq = (
-    df.drop_duplicates(subset=["season", "round"])
-      .groupby("circuit_id")["race_had_rain"]
-      .mean()
-      .rename("circuit_wet_race_frequency")
-)
-df = df.join(wet_freq, on="circuit_id")
-print(f"[8] circuit_wet_race_frequency — nulls: {df['circuit_wet_race_frequency'].isna().sum()}")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# FEATURE 9: grid penalties (Jolpica API)
+# GRID PENALTIES (Jolpica API, cached in data/penalty_cache.json)
 # ─────────────────────────────────────────────────────────────────────────────
 BASE_URL    = "https://api.jolpi.ca/ergast/f1"
 SLEEP_BASE  = 1.5
@@ -269,41 +212,52 @@ def get_penalty_data(year, round_num):
         out[code] = max(0, g_p - q_p) if (q_p and g_p) else 0
     return out
 
-cache = json.loads(CACHE_FILE.read_text()) if CACHE_FILE.exists() else {}
-races = df[["season", "round"]].drop_duplicates().sort_values(["season", "round"])
-print(f"\n[9] Grid penalties: {len(races)} races, {len(cache)} cached")
+def refresh_penalties(df: pd.DataFrame) -> pd.DataFrame:
+    cache = json.loads(CACHE_FILE.read_text()) if CACHE_FILE.exists() else {}
+    races = df[RACE_KEYS].drop_duplicates().sort_values(RACE_KEYS)
+    print(f"Grid penalties: {len(races)} races, {len(cache)} cached")
 
-for _, row in races.iterrows():
-    year, rnd = int(row["season"]), int(row["round"])
-    key = f"{year}_{rnd}"
-    if key in cache:
-        continue
-    print(f"    fetching {year} R{rnd}...")
-    result = get_penalty_data(year, rnd)
-    if result is not None:
-        cache[key] = result
-        CACHE_FILE.write_text(json.dumps(cache))
-    time.sleep(SLEEP_BASE)
+    for _, row in races.iterrows():
+        year, rnd = int(row["season"]), int(row["round"])
+        key = f"{year}_{rnd}"
+        if key in cache:
+            continue
+        print(f"    fetching {year} R{rnd}...")
+        result = get_penalty_data(year, rnd)
+        if result is not None:
+            cache[key] = result
+            CACHE_FILE.write_text(json.dumps(cache))
+        time.sleep(SLEEP_BASE)
 
-def lookup_penalty(row):
-    key = f"{int(row['season'])}_{int(row['round'])}"
-    val = cache.get(key, {}).get(row["driver_id"], 0)
-    if isinstance(val, dict):
-        return val.get("grid_penalty_places", 0)
-    return val
+    def lookup_penalty(row):
+        key = f"{int(row['season'])}_{int(row['round'])}"
+        val = cache.get(key, {}).get(row["driver_id"], 0)
+        if isinstance(val, dict):
+            return val.get("grid_penalty_places", 0)
+        return val
 
-df["grid_penalty_places"] = df.apply(lookup_penalty, axis=1)
-df["had_grid_penalty"]    = df["grid_penalty_places"] > 0
-print(f"    penalised rows: {df['had_grid_penalty'].sum()}")
+    df = df.copy()
+    df["grid_penalty_places"] = df.apply(lookup_penalty, axis=1)
+    df["had_grid_penalty"]    = df["grid_penalty_places"] > 0
+    print(f"    penalised rows: {df['had_grid_penalty'].sum()}")
+    return df
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FINAL: null check + save
+# MAIN
 # ─────────────────────────────────────────────────────────────────────────────
-print("\n── Final null counts ──")
-print(df.isnull().sum())
-print(f"\nShape: {df.shape}")
-print(f"Columns: {df.columns.tolist()}")
+def main():
+    base = refresh_penalties(load_base())
+    print(f"Loaded {len(base)} rows")
+    df = build_features(base)
 
-df.to_csv(OUTPUT_CSV, index=False)
-print(f"\nSaved → {OUTPUT_CSV}")
+    print("\n── Final null counts ──")
+    print(df.isnull().sum())
+    print(f"\nShape: {df.shape}")
+
+    df.to_csv(OUTPUT_CSV, index=False)
+    print(f"\nSaved → {OUTPUT_CSV}")
+
+
+if __name__ == "__main__":
+    main()
