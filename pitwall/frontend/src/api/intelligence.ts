@@ -14,7 +14,8 @@ export interface DriverPrediction {
   driver_id:          string
   driver_full_name:   string
   team_id:            string
-  grid_position:      number | null
+  grid_position:      number | null   // null before qualifying
+  pre_qualifying:     boolean
   predicted_score:    number   // lower = better finish
   predicted_rank:     number
   shap_values:        Record<string, number>
@@ -32,6 +33,7 @@ export interface ExplanationFactor {
   feature:    string
   label:      string
   value:      number | null   // the feature's actual value for this driver
+  estimated:  boolean         // pre-qualifying stand-in (average of recent races)
   shap_value: number          // its contribution to the score (negative = better finish)
   direction:  'improves' | 'worsens'
 }

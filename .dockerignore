@@ -6,5 +6,7 @@
 !models/feature_cols.pkl
 !models/model_config.json
 !data/features.csv
+!data/driver_race_results.csv
+!2Feature_engineering.py
 **/__pycache__
 **/*.pyc

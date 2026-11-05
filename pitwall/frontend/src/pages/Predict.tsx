@@ -49,9 +49,7 @@ export default function Predict() {
   const [explanation, setExplanation] = useState<ExplanationResponse | null>(null)
   const [loadingExp,  setLoadingExp]  = useState(false)
 
-  const hasQualiData = predictions.some(
-  p => p.grid_position !== null && p.grid_position <= 20
-)
+  const preQualifying = predictions.some(p => p.pre_qualifying)
   useEffect(() => {
     let mounted = true
 
@@ -140,11 +138,11 @@ export default function Predict() {
         </div>
         
         {/* // add this in JSX after the mb-8 header div */}
-        {!hasQualiData && predictions.length > 0 && (
+        {preQualifying && predictions.length > 0 && (
           <div className="bg-yellow-950 border border-yellow-800 rounded-xl
                           p-3 mb-6 text-yellow-300 text-xs">
-            ⚠️ Qualifying hasn't happened yet — grid positions are estimated from the last race.
-            Prediction sharpens automatically after Saturday qualifying.
+            ⚠️ Qualifying hasn't happened yet, so the starting grid is unknown. Qualifying inputs
+            (marked "est.") are each driver's average over their last 3 races.
           </div>
         )}
         {/* ── Error state ── */}
@@ -289,7 +287,8 @@ export default function Predict() {
               raceContext={nextRace
                 ? `The active prediction is for the ${nextRace.name}, round ${nextRace.round} of ${nextRace.season}. `
                   + `The model's current predicted top three are: ${predictions.slice(0, 3)
-                    .map(driver => `${driver.driver_full_name} (P${driver.predicted_rank}, grid P${driver.grid_position ?? 'unknown'})`)
+                    .map(driver => `${driver.driver_full_name} (P${driver.predicted_rank}, grid ${
+                      driver.grid_position === null ? 'not known yet' : `P${driver.grid_position}`})`)
                     .join('; ')}. Use the prediction data, not invented qualifying results.`
                 : undefined}
             />

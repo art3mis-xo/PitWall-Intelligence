@@ -60,10 +60,15 @@ async def explain_endpoint(season: int, round_num: int, driver_id: str, request:
 
         try:
             limiter.check(client_ip(request))
+            grid = driver_result["grid_position"]
+            grid_text = (f"Their grid position is P{grid}. " if grid is not None else
+                         "Qualifying has not taken place yet, so their grid position is unknown; "
+                         "factors marked estimated are averages over the driver's last 3 races, "
+                         "not this weekend's results. Say so in the explanation. ")
             narrative = await chat(
                 f"Explain the prediction for {driver_result['driver_full_name']} "
                 f"predicted P{driver_result['predicted_rank']} in {season} Round {round_num}. "
-                f"Their grid position is P{driver_result['grid_position']}. "
+                f"{grid_text}"
                 f"Use only these factors: {driver_result['top_factors']}. "
                 "In each factor, 'value' is the feature's actual value for this driver and "
                 "'shap_value' is its contribution to the model's score (negative = better finish); "
@@ -85,6 +90,7 @@ async def explain_endpoint(season: int, round_num: int, driver_id: str, request:
             )
 
         return {
+            "pre_qualifying": driver_result["pre_qualifying"],
             "driver_id":      driver_result["driver_id"],
             "driver_full_name": driver_result["driver_full_name"],
             "team_id":        driver_result["team_id"],

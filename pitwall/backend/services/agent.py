@@ -22,6 +22,16 @@ llm = ChatGroq(
     api_key=api_key,
 )
 
+def _grid_text(result: dict) -> str:
+    if result["grid_position"] is None:
+        return "not known yet (qualifying has not taken place)"
+    return f"P{result['grid_position']}"
+
+
+PRE_QUALI_NOTE = ("This race has not been qualified yet: qualifying inputs are estimated from each "
+                  "driver's last 3 races and the starting grid is unknown.")
+
+
 @tool
 def race_predictor_tool(season: int, round_num: int) -> str:
     """Predicts the finishing order for a given F1 race."""
@@ -30,10 +40,11 @@ def race_predictor_tool(season: int, round_num: int) -> str:
     top10 = results[:10]
     summary = "\n".join([
             f"P{r['predicted_rank']}: {r['driver_full_name']} ({r['team_id']}) "
-            f"[grid: P{r['grid_position']}]"
+            f"[grid: {_grid_text(r)}]"
             for r in top10
         ])
-    return f"Predicted top 10 for {season} Round {round_num}:\n{summary}"
+    note = f"\n{PRE_QUALI_NOTE}" if results and results[0]["pre_qualifying"] else ""
+    return f"Predicted top 10 for {season} Round {round_num}:\n{summary}{note}"
 
 @tool
 def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
@@ -48,7 +59,8 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
             return f"No prediction found for driver {driver_id}"
  
         factors_text = "\n".join([
-            f"  - {f['label']}: value {f['value'] if f['value'] is not None else 'unknown'}; "
+            f"  - {f['label']}: value {f['value'] if f['value'] is not None else 'unknown'}"
+            f"{' (estimated from recent races)' if f['estimated'] else ''}; "
             f"SHAP contribution {f['shap_value']:+.3f} "
             f"({'favours better finish' if f['shap_value'] < 0 else 'hurts finish'})"
             for f in driver_result["top_factors"]
@@ -58,8 +70,9 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
             f"SHAP explanation for {driver_result['driver_full_name']} "
             f"(predicted P{driver_result['predicted_rank']}):\n\n"
             f"Key factors driving this prediction:\n{factors_text}\n\n"
-            f"Grid position: P{driver_result['grid_position']}\n"
-            f"Predicted finish: P{driver_result['predicted_rank']}\n\n"
+            f"Grid position: {_grid_text(driver_result)}\n"
+            f"Predicted finish: P{driver_result['predicted_rank']}\n"
+            f"{PRE_QUALI_NOTE if driver_result['pre_qualifying'] else ''}\n\n"
             f"'value' is the feature's actual value for this driver; 'SHAP contribution' is how much "
             f"it moved the model's score (negative = better finish) and is not a time, position or count. "
             f"Use these specific values to generate a grounded natural language explanation. "

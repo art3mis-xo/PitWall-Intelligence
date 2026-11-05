@@ -23,7 +23,9 @@ RUN pip install -r requirements-server.txt
 
 COPY pitwall/backend pitwall/backend
 COPY models/race_predictor.pkl models/feature_cols.pkl models/model_config.json models/
-COPY data/features.csv data/
+COPY data/features.csv data/driver_race_results.csv data/
+# the feature pipeline builds features for races that haven't happened yet
+COPY 2Feature_engineering.py ./
 
 RUN useradd --create-home --uid 10001 app \
  && mkdir -p cache_f1 \

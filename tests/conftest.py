@@ -17,6 +17,17 @@ def client():
         yield c
 
 
+EVENT_NAMES = {(2026, 15): "Azerbaijan Grand Prix", (2026, 20): "São Paulo Grand Prix"}
+
+
+@pytest.fixture(autouse=True)
+def offline_event_names(monkeypatch):
+    # Upcoming-race predictions look up the circuit in the FastF1 schedule (network)
+    from pitwall.backend.services import race_predictor
+    monkeypatch.setattr(race_predictor, "_event_name",
+                        lambda season, rnd: EVENT_NAMES.get((season, rnd), f"Round {rnd}"))
+
+
 @pytest.fixture(autouse=True)
 def fresh_rate_limits():
     from pitwall.backend.services.rate_limit import limiter

@@ -71,3 +71,30 @@ def test_upcoming_race_uses_active_grid_only():
     results = rp.predict_race(*UPCOMING)
     assert {r["driver_id"] for r in results} <= set(rp.ACTIVE_DRIVERS_2026)
     assert len(results) > 0
+
+
+def test_upcoming_race_does_not_present_an_old_grid():
+    # Regression: the previous race's grid used to be shown as this race's grid
+    results = rp.predict_race(*UPCOMING)
+    assert all(r["pre_qualifying"] and r["grid_position"] is None for r in results)
+    for r in results:
+        for f in r["top_factors"]:
+            assert f["estimated"] == (f["feature"] in rp.ESTIMATED_INPUTS)
+
+
+def test_upcoming_race_circuit_features_use_the_actual_circuit():
+    # Regression: circuit history used to come from the previous race's circuit
+    rows = rp._upcoming_race_rows(*UPCOMING).set_index("driver_id")
+    base = pd.read_csv(rp.BASE_RESULTS_PATH)
+    past = base[(base["driver_id"] == "VER") & (base["circuit_id"] == "Azerbaijan Grand Prix")]
+    assert rows.loc["VER", "circuit_id"] == "Azerbaijan Grand Prix"
+    assert rows.loc["VER", "career_starts_at_circuit"] == len(past)
+    assert rows.loc["VER", "avg_finish_at_circuit"] == pytest.approx(past["finish_position"].mean())
+
+
+def test_upcoming_race_quali_inputs_are_recent_averages():
+    rows = rp._upcoming_race_rows(*UPCOMING).set_index("driver_id")
+    history = rp.load_features()
+    last3 = history[history["driver_id"] == "NOR"].sort_values(["season", "round"]).tail(3)
+    assert rows.loc["NOR", "quali_position"] == pytest.approx(last3["quali_position"].mean())
+    assert rows.loc["NOR", "grid_position"] == rows.loc["NOR", "quali_position"]

@@ -68,7 +68,9 @@ export default function ShapWaterfall({ factors }: Props) {
               {factor.label}
               {factor.value !== null && (
                 // the driver's actual value, not the contribution shown in the bar
-                <span className="text-gray-600"> = {Number(factor.value.toFixed(3))}</span>
+                <span className="text-gray-600">
+                  {' '}= {Number(factor.value.toFixed(3))}{factor.estimated && ' est.'}
+                </span>
               )}
             </div>
             <div className="flex-1 flex items-center gap-2">
