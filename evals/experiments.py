@@ -101,12 +101,11 @@ def main():
         if key(row) > key(best):
             best = row
 
+    m = meta("python evals/experiments.py", df, protocol=f"train {TRAIN_FIRST}-{VAL_SEASON - 1}, evaluate {VAL_SEASON} (validation)",
+             train_rows=len(tr), eval_rows=len(va), hp_budget=HP_BUDGET, hp_seed=HP_SEED)
     final = {**best["config"], "name": "final",
              "description": f"Selected by evals/experiments.py: experiment {best['id']}, highest mean Spearman on validation {VAL_SEASON}."}
     (ROOT / "configs" / "final.json").write_text(json.dumps(final, indent=2) + "\n")
-
-    m = meta("python evals/experiments.py", df, protocol=f"train {TRAIN_FIRST}-{VAL_SEASON - 1}, evaluate {VAL_SEASON} (validation)",
-             train_rows=len(tr), eval_rows=len(va), hp_budget=HP_BUDGET, hp_seed=HP_SEED)
     lines = header("Experiments log (validation 2025 only)", m) + [
         "Rules fixed before running: primary metric is mean per-race Spearman on 2025 (tie-break NDCG@10). "
         "Stage 1 compares objectives; stage 2 adds pre-race feature groups one at a time and keeps a group only if "
