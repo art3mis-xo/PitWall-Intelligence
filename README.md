@@ -6,11 +6,19 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 
 ## What It Does
 
-- **Race predictor.** An XGBoost regressor predicts each driver's finishing position from 20 features built from race results, qualifying times, grid penalties, team and driver history, and race weather. Drivers are ranked by predicted position.
+- **Race predictor.** A LightGBM ranking model (lambdarank, one group per race) orders the drivers in a race from 28 features known before the race: starting grid, qualifying results, grid penalties, and driver, team and circuit history from earlier races.
 - **Per-driver explanations.** SHAP values (`shap.TreeExplainer`) show how much each feature moved a driver's prediction; the API labels each factor `improves` or `worsens`.
 - **Chat assistant.** A LangGraph tool-calling loop on Groq (default model `openai/gpt-oss-20b`, set by `GROQ_MODEL`) with three tools: race prediction, SHAP explanation, and driver statistics from the feature store. Responses stream to the UI.
 - **Race exploration.** Position changes, lap times, tyre stints, gear shifts and speed traces with corner markers, built from FastF1 session data. These charts are for display; telemetry is not a model input.
 - **News and standings.** Headlines from four RSS feeds (cached 15 minutes), plus championship standings and last-race results from the Jolpica API.
+
+## Results
+
+**Leakage found and removed.** The original model reported Spearman 0.874 on 2025, but 7 of its 20 features were computed from the race being predicted or from later seasons; one leaked column alone scored 0.806 on 2026. Every feature is now built from pre-race data only, and a unit test checks that changing a race's results cannot change any feature of that race or earlier ones.
+
+**Leak-free result.** The leak-free model matches a strong grid-position baseline (Spearman 0.667 vs 0.650 on 14 held-out 2026 races, 95% CI for the difference −0.018 to +0.055).
+
+Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 36. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
 
 ## How It's Built
 
@@ -21,34 +29,34 @@ FastF1 + Jolpica APIs
 1Build_dataset_base.py -> add_grid_penalties.py -> 2Feature_engineering.py
         |
         v
-data/features.csv -> 3Model_training.ipynb -> models/*.pkl
-                                                  |
-FastAPI backend (pitwall/backend) ----------------+
+data/features.csv -> train.py (configs/final.json) -> models/
+                                                          |
+FastAPI backend (pitwall/backend) ------------------------+
   routers: selectors, telemetry, predict, intelligence (chat, explain, news), live
-  services: race_predictor (XGBoost + SHAP), agent (LangGraph + Groq), FastF1 session cache, RSS
+  services: race_predictor (LightGBM + SHAP), agent (LangGraph + Groq), FastF1 session cache, RSS
         |
         v
 React + TypeScript + Vite + Plotly dashboard (pitwall/frontend)
 ```
 
 - **Data pipeline.** `1Build_dataset_base.py` pulls race results, qualifying times and race weather from FastF1. `add_grid_penalties.py` derives grid penalties by comparing qualifying and grid positions from Jolpica, with retries and a resumable cache. `2Feature_engineering.py` builds the feature table.
-- **Model.** `3Model_training.ipynb` backtests season by season (train on earlier seasons, test on the next) and exports the final model and its feature list.
 - **Backend.** FastAPI with 17 routes. The model, feature store and SHAP explainer are loaded once and cached; FastF1 sessions are cached in memory, with a per-session async lock so concurrent requests load each session once.
 - **Frontend.** React 19, TypeScript, Vite, Tailwind and Plotly. Charts arrive as Plotly JSON from the backend, and driver toggles change trace visibility in the browser without refetching.
-- **Tests.** 34 pytest tests (see below).
+- **Tests.** 36 pytest tests (see below).
 
 ## Repository Layout
 
 ```text
 1Build_dataset_base.py     Driver-race base table from FastF1
 add_grid_penalties.py      Grid penalties from Jolpica (qualifying vs grid position)
-2Feature_engineering.py    Model features -> data/features.csv
-3Model_training.ipynb      Season backtest, final training, model export
-models/                    Trained model and its feature list
+2Feature_engineering.py    Pre-race features -> data/features.csv
+train.py                   Trains the model from a config in configs/
+configs/                   Model configurations (final.json is the served one)
+models/                    Trained model, its feature list and config
 pitwall/backend/           FastAPI app, routers and services
 pitwall/frontend/          React dashboard
 tests/                     pytest suite (unit + FastF1 integration)
-evals/                     LLM eval script (see "Evals" below)
+evals/                     Evaluation scripts; results in evals/results/
 legacy/                    Earlier experiments, not used by the app (see legacy/README.md)
 ```
 
@@ -87,13 +95,23 @@ cd pitwall/frontend && npm run dev                                 # http://loca
 ## Tests
 
 ```bash
-pytest                          # all 34 tests
-pytest -m "not integration"     # 26 unit tests: no network, no Groq calls
+pytest                          # all 36 tests
+pytest -m "not integration"     # 28 unit tests: no network, no Groq calls
 ```
 
-The unit tests cover the predictor (ranking, SHAP values summing to the prediction, factor directions), the API endpoints with the LLM mocked, and the agent's routing and tools. The 8 integration tests load real sessions through FastF1 and read them from the FastF1 cache.
+The unit tests cover the feature pipeline (no feature may depend on the race's own or later results), the predictor (ranking, SHAP values summing to the prediction, factor directions), the API endpoints with the LLM mocked, and the agent's routing and tools. The 8 integration tests load real sessions through FastF1 and read them from the FastF1 cache.
 
 ## Evals
+
+Model evaluation, in run order; each script writes JSON and a Markdown table to `evals/results/`:
+
+```bash
+python evals/backtest_audit.py   # the original model vs the grid baseline, with and without leaky features
+python evals/backtest_clean.py   # leak-free features on validation 2025
+python evals/experiments.py      # model selection on 2025; writes configs/final.json
+python evals/final_test.py       # frozen config, tested once on 2026
+python evals/paired_test.py      # bootstrap CI and Wilcoxon test vs the baseline
+```
 
 `evals/eval_llm.py` scores a local Llama 3.1 8B (4-bit, via MLX) on two hand-written F1 questions, with keyword checks and an LLM judge. It does not evaluate the Groq agent used by the app.
 
@@ -103,9 +121,10 @@ The unit tests cover the predictor (ranking, SHAP values summing to the predicti
 ./venv/bin/python 1Build_dataset_base.py
 ./venv/bin/python add_grid_penalties.py
 ./venv/bin/python 2Feature_engineering.py
+./venv/bin/python train.py
 ```
 
-Then run `3Model_training.ipynb`. Its final cell writes `models/xgb_race_predictor_final.pkl` and `models/feature_cols.pkl`. Restart the backend afterwards; it caches the model and feature store in memory.
+`train.py` trains `configs/final.json` on all seasons and writes `models/race_predictor.pkl`, `models/feature_cols.pkl` and `models/model_config.json`. Restart the backend afterwards; it caches the model and feature store in memory.
 
 ## API
 
