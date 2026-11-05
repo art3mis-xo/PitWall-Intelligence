@@ -47,13 +47,11 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
         if not driver_result:
             return f"No prediction found for driver {driver_id}"
  
-        shap = driver_result["shap_values"]
-        top_factors = sorted(shap.items(), key=lambda x: abs(x[1]), reverse=True)[:5]
- 
         factors_text = "\n".join([
-            f"  - {FEATURE_LABELS.get(k, k)}: {'+' if v < 0 else '-'}{abs(v):.3f} "
-            f"({'favours better finish' if v < 0 else 'hurts finish'})"
-            for k, v in top_factors
+            f"  - {f['label']}: value {f['value'] if f['value'] is not None else 'unknown'}; "
+            f"SHAP contribution {f['shap_value']:+.3f} "
+            f"({'favours better finish' if f['shap_value'] < 0 else 'hurts finish'})"
+            for f in driver_result["top_factors"]
         ])
  
         return (
@@ -62,6 +60,8 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
             f"Key factors driving this prediction:\n{factors_text}\n\n"
             f"Grid position: P{driver_result['grid_position']}\n"
             f"Predicted finish: P{driver_result['predicted_rank']}\n\n"
+            f"'value' is the feature's actual value for this driver; 'SHAP contribution' is how much "
+            f"it moved the model's score (negative = better finish) and is not a time, position or count. "
             f"Use these specific values to generate a grounded natural language explanation. "
             f"Do not invent statistics not listed above."
         )

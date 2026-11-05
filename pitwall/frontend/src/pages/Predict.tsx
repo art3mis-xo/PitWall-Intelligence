@@ -277,14 +277,7 @@ export default function Predict() {
                   <ShapWaterfall factors={explanation.top_factors} />
                 ) : !loadingExp ? (
                   // fallback: use top_factors from prediction if explanation failed
-                  <ShapWaterfall
-                    factors={selected.top_factors.map(f => ({
-                      feature:    f.feature,
-                      label:      f.feature.replace(/_/g, ' '),
-                      shap_value: f.value,
-                      direction:  f.direction,
-                    }))}
-                  />
+                  <ShapWaterfall factors={selected.top_factors} />
                 ) : null}
               </>
             )}

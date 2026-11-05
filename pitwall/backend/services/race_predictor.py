@@ -148,7 +148,7 @@ def predict_race(season: int, round_num: int) -> list[dict]:
             "grid_position":      int(row["grid_position"]) if pd.notna(row["grid_position"]) else None,
             "predicted_score":    round(float(preds[i]), 4),   # lower = better finish
             "shap_values":        shap_dict,
-            "top_factors":        _top_factors(shap_dict, feat_cols),
+            "top_factors":        _top_factors(shap_dict, X.iloc[i]),
         })
 
     results.sort(key=lambda x: x["predicted_score"])
@@ -158,13 +158,14 @@ def predict_race(season: int, round_num: int) -> list[dict]:
     return results
 
 
-def _top_factors(shap_dict: dict, feat_cols: list, n: int = 5) -> list[dict]:
+def _top_factors(shap_dict: dict, feature_values: pd.Series, n: int = 5) -> list[dict]:
     sorted_feats = sorted(shap_dict.items(), key=lambda x: abs(x[1]), reverse=True)
     return [
         {
             "feature":   k,
             "label":     FEATURE_LABELS.get(k, k.replace("_", " ").title()),
-            "value":     v,
+            # the feature's own value for this driver (None when unknown, e.g. no Q3 time)
+            "value":     round(float(feature_values[k]), 4) if pd.notna(feature_values[k]) else None,
             "shap_value": v,
             # lower score = better finish, so a negative SHAP value moves the driver up the order
             "direction": "improves" if v < 0 else "worsens",

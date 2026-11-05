@@ -63,8 +63,13 @@ export default function ShapWaterfall({ factors }: Props) {
 
         return (
           <div key={i} className="flex items-center gap-3">
-            <div className="w-44 text-xs text-gray-400 text-right truncate flex-shrink-0">
+            <div className="w-44 text-xs text-gray-400 text-right truncate flex-shrink-0"
+                 title={factor.label}>
               {factor.label}
+              {factor.value !== null && (
+                // the driver's actual value, not the contribution shown in the bar
+                <span className="text-gray-600"> = {Number(factor.value.toFixed(3))}</span>
+              )}
             </div>
             <div className="flex-1 flex items-center gap-2">
               <div className="flex-1 h-5 bg-gray-800 rounded overflow-hidden">

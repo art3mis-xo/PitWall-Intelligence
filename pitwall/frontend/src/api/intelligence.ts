@@ -18,11 +18,7 @@ export interface DriverPrediction {
   predicted_score:    number   // lower = better finish
   predicted_rank:     number
   shap_values:        Record<string, number>
-  top_factors:        Array<{
-    feature:   string
-    value:     number
-    direction: 'improves' | 'worsens'
-  }>
+  top_factors:        ExplanationFactor[]
 }
 
 export interface PredictionResponse {
@@ -35,7 +31,8 @@ export interface PredictionResponse {
 export interface ExplanationFactor {
   feature:    string
   label:      string
-  shap_value: number
+  value:      number | null   // the feature's actual value for this driver
+  shap_value: number          // its contribution to the score (negative = better finish)
   direction:  'improves' | 'worsens'
 }
 

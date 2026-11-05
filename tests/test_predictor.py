@@ -1,4 +1,5 @@
 """Race predictor service: output shape, ranking and SHAP consistency (no network)."""
+import pandas as pd
 import pytest
 
 from pitwall.backend.services import race_predictor as rp
@@ -44,6 +45,20 @@ def test_top_factors_are_largest_by_magnitude(completed):
         top = [f["feature"] for f in r["top_factors"]]
         by_size = sorted(r["shap_values"], key=lambda k: abs(r["shap_values"][k]), reverse=True)
         assert top == by_size[:5]
+
+
+def test_factor_value_is_the_feature_not_the_shap_value(completed):
+    # Regression: 'value' used to repeat the SHAP value, and the LLM narrated it as a real gap/time
+    df = rp.load_features()
+    race = df[(df["season"] == COMPLETED[0]) & (df["round"] == COMPLETED[1])].set_index("driver_id")
+    for r in completed:
+        for f in r["top_factors"]:
+            actual = race.loc[r["driver_id"], f["feature"]]
+            if pd.isna(actual):
+                assert f["value"] is None
+            else:
+                assert f["value"] == pytest.approx(float(actual), abs=1e-4)
+            assert f["shap_value"] == r["shap_values"][f["feature"]]
 
 
 def test_direction_matches_shap_sign(completed):
