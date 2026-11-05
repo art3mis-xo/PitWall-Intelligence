@@ -1,4 +1,4 @@
-import client from './client'
+import client, { API_BASE } from './client'
 
 // ── existing types ─────────────────────────────────────────────────────────
 
@@ -153,12 +153,17 @@ export const chatStream = async (
   onChunk: (chunk: string) => void,
   onDone: () => void
 ): Promise<void> => {
-  const response = await fetch('/api/intelligence/chat', {
+  const response = await fetch(`${API_BASE}/intelligence/chat`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify({ message, history, stream: true }),
   })
 
+  if (!response.ok) {
+    // e.g. 429 from the rate limit: surface the backend's message instead of streaming JSON
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.detail ?? `Request failed with status ${response.status}`)
+  }
   if (!response.body) throw new Error('No response body')
 
   const reader  = response.body.getReader()

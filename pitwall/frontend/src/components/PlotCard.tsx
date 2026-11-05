@@ -1,6 +1,6 @@
 // src/components/PlotCard.tsx
 import { useEffect, useState, useRef } from 'react'
-import client from '../api/client'
+import client, { errorMessage } from '../api/client'
 
 interface PlotCardProps {
   title: string
@@ -39,7 +39,7 @@ export default function PlotCard({ title, endpoint, params }: PlotCardProps) {
       })
       .catch(err => {
         if (!isMounted) return
-        setError(err.message)
+        setError(errorMessage(err))
         setLoading(false)
       })
 

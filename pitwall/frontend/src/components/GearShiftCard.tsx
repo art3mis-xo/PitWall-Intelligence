@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import client from '../api/client'
+import client, { errorMessage } from '../api/client'
 
 interface GearShiftCardProps {
   endpoint: string
@@ -36,7 +36,7 @@ export default function GearShiftCard({ endpoint, params }: GearShiftCardProps) 
         setSelectedDriver(drivers[0] ?? '')
         setCompareDriver(drivers[1] ?? drivers[0] ?? '')
       })
-      .catch(err => mounted && setError(err.message))
+      .catch(err => mounted && setError(errorMessage(err)))
       .finally(() => mounted && setLoading(false))
 
     return () => { mounted = false }

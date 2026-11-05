@@ -57,12 +57,14 @@ export default function ChatPanel({ raceContext }: ChatPanelProps) {
         },
         () => setStreaming(false)
       )
-    } catch {
+    } catch (err) {
       setMessages(prev => {
         const updated = [...prev]
         updated[updated.length - 1] = {
           role:    'assistant',
-          content: 'Something went wrong. Please try again.',
+          content: err instanceof Error && err.message
+            ? err.message
+            : 'Something went wrong. Please try again.',
         }
         return updated
       })
