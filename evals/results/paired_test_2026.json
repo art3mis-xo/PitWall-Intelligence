@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "date": "2026-11-05T06:09:10+00:00",
+    "git_commit": "49007408099498ab01c0ef35e49c92ef6ac1f5d7",
+    "command": "python evals/paired_test.py",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "source": "evals/results/final_test_2026.json",
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 0,
+      "method": "percentile, resampling races"
+    }
+  },
+  "results": [
+    {
+      "model": "Final model: Selected by evals/experiments.py: experiment H18, highest mean Spearman on validation 2025.",
+      "config": "configs/final.json",
+      "n_races": 14,
+      "mean_diff": 0.016,
+      "ci95": [
+        -0.018,
+        0.055
+      ],
+      "races_model_better": 7,
+      "races_baseline_better": 7,
+      "wilcoxon_statistic": 44.0,
+      "wilcoxon_p": 0.626,
+      "per_race_diff": [
+        0.0429,
+        -0.0203,
+        -0.0203,
+        -0.0553,
+        0.0136,
+        -0.0949,
+        -0.0192,
+        -0.0011,
+        0.0497,
+        0.1141,
+        0.0271,
+        0.0305,
+        0.1954,
+        -0.0327
+      ]
+    },
+    {
+      "model": "XGBoost, leak-free notebook features (reference, not tuned)",
+      "config": "configs/clean_xgb.json",
+      "n_races": 14,
+      "mean_diff": 0.009,
+      "ci95": [
+        -0.04,
+        0.068
+      ],
+      "races_model_better": 7,
+      "races_baseline_better": 7,
+      "wilcoxon_statistic": 48.0,
+      "wilcoxon_p": 0.808,
+      "per_race_diff": [
+        0.1118,
+        -0.1141,
+        -0.035,
+        0.0169,
+        0.0339,
+        -0.0644,
+        -0.0632,
+        0.0147,
+        -0.1039,
+        0.1468,
+        -0.044,
+        -0.061,
+        0.2835,
+        0.0034
+      ]
+    }
+  ]
+}
