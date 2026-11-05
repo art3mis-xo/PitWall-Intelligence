@@ -1,5 +1,5 @@
 """
-Leakage audit: reproduce the 3Model_training.ipynb backtest and compare it with
+Leakage audit: reproduce the backtest from legacy/3Model_training.ipynb and compare it with
 a grid-position baseline and with the leaky features removed.
 
 Protocol (same as the notebook): for each holdout season, train on all earlier
@@ -33,7 +33,7 @@ RESULTS = ROOT / "evals" / "results"
 TARGET = "finish_position"
 HOLDOUTS = [2025, 2026]
 
-# Hyperparameters copied from 3Model_training.ipynb cell 7
+# Hyperparameters copied from legacy/3Model_training.ipynb cell 7
 XGB_PARAMS = dict(objective="reg:squarederror", n_estimators=500, max_depth=4, learning_rate=0.05,
                   subsample=0.85, colsample_bytree=0.85, min_child_weight=3, reg_lambda=1.5,
                   reg_alpha=0.1, random_state=42, n_jobs=-1)

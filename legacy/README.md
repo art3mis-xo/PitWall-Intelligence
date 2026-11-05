@@ -6,6 +6,7 @@ Earlier experiments kept for reference. Nothing in the app, pipeline, tests or e
 |---|---|
 | `Build_dataset_lapwise.py` | Builds a lap-level dataset (2018–2022); the model never used it. |
 | `Feature_Engineering.ipynb` | Notebook version of `2Feature_engineering.py`, superseded by the script. |
+| `3Model_training.ipynb` | Second training notebook; replaced by `train.py`. Its printed metrics come from features with target leakage (see `evals/results/LEAKAGE.md`). |
 | `Model_training.ipynb` | First training notebook (fixed split, RF/LightGBM/grid search), superseded by `3Model_training.ipynb`. |
 | `gbm_f1_ranker.txt` | LightGBM lambdarank model on a different feature set; the code that trained it is not in the repo. |
 | `used_cols.csv` | Feature list for `gbm_f1_ranker.txt`. |
