@@ -4,6 +4,8 @@ PitWall predicts the finishing order of a Formula 1 race from past results, qual
 
 Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 races.
 
+**Live demo:** [pit-wall-intelligence.vercel.app](https://pit-wall-intelligence.vercel.app) (API on Render; see [DEPLOY.md](DEPLOY.md)). Race telemetry charts need F1TV-authenticated data, so they run locally only. For a race that hasn't been qualified yet, the prediction uses each driver's average qualifying over their last 3 races, marked as estimated.
+
 ## What It Does
 
 - **Race predictor.** A LightGBM ranking model (lambdarank, one group per race) orders the drivers in a race from 28 features known before the race: starting grid, qualifying results, grid penalties, and driver, team and circuit history from earlier races.
@@ -18,7 +20,7 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 
 **Leak-free result.** The leak-free model matches a strong grid-position baseline (Spearman 0.667 vs 0.650 on 14 held-out 2026 races, 95% CI for the difference −0.018 to +0.055).
 
-Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 36. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
+Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 58. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
 
 ## How It's Built
 
@@ -42,7 +44,7 @@ React + TypeScript + Vite + Plotly dashboard (pitwall/frontend)
 - **Data pipeline.** `1Build_dataset_base.py` pulls race results, qualifying times and race weather from FastF1. `add_grid_penalties.py` derives grid penalties by comparing qualifying and grid positions from Jolpica, with retries and a resumable cache. `2Feature_engineering.py` builds the feature table.
 - **Backend.** FastAPI with 17 routes. The model, feature store and SHAP explainer are loaded once and cached; FastF1 sessions are cached in memory, with a per-session async lock so concurrent requests load each session once.
 - **Frontend.** React 19, TypeScript, Vite, Tailwind and Plotly. Charts arrive as Plotly JSON from the backend, and driver toggles change trace visibility in the browser without refetching.
-- **Tests.** 36 pytest tests (see below).
+- **Tests.** 58 pytest tests (see below).
 
 ## Repository Layout
 
@@ -95,8 +97,8 @@ cd pitwall/frontend && npm run dev                                 # http://loca
 ## Tests
 
 ```bash
-pytest                          # all 36 tests
-pytest -m "not integration"     # 28 unit tests: no network, no Groq calls
+pytest                          # all 58 tests
+pytest -m "not integration"     # 50 unit tests: no network, no Groq calls
 ```
 
 The unit tests cover the feature pipeline (no feature may depend on the race's own or later results), the predictor (ranking, SHAP values summing to the prediction, factor directions), the API endpoints with the LLM mocked, and the agent's routing and tools. The 8 integration tests load real sessions through FastF1 and read them from the FastF1 cache.
