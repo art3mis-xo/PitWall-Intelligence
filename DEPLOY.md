@@ -14,7 +14,7 @@ Deploy in this order, because each side needs the other's URL.
 
    | Variable | Value | Required |
    |---|---|---|
-   | `GROQ_API_KEY` | your Groq API key | yes |
+   | `GROQ_API_KEY` | your Groq API key, pasted **without quotes** (a quoted value is sent to Groq as-is and rejected with 401) | yes |
    | `CORS_ORIGINS` | your Vercel URL, e.g. `https://pitwall-intelligence.vercel.app` (no trailing slash; comma-separate several). Set a placeholder now and update it in step 3. | yes |
    | `GROQ_MODEL` | `openai/gpt-oss-20b` (the default if unset) | no |
    | `GROQ_LIMIT_PER_IP` | AI requests per visitor per window (default `10`) | no |
@@ -37,6 +37,8 @@ Deploy in this order, because each side needs the other's URL.
 
 1. Back on Render, set `CORS_ORIGINS` to the Vercel URL (e.g. `https://pitwall-intelligence.vercel.app`) and save; Render redeploys.
 2. Open the Vercel URL. The landing page should show standings and news, and `/predict` should show predictions with SHAP factors.
+
+The first requests after the API starts (or wakes up) are slow: the race calendar and standings are fetched and cached on first use, and the predict page waits for the next-race lookup before loading predictions. In local testing of the Docker image they appeared after a reload.
 
 ## Groq quota protection
 
