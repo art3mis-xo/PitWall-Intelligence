@@ -15,3 +15,4 @@ Earlier experiments kept for reference. Nothing in the app, pipeline, tests or e
 | `eval_models.py` | Eval stubs for a tyre-degradation model, winner classifier and pit optimizer, none of which were built. |
 | `PLAN.md` | Original week-by-week build plan. |
 | `miscellaneous/` | Notebooks and a script from first exploring FastF1. |
+| `llm_eval_base_model/` | First LLM eval: scored a local Llama 3.1 8B (not the served Groq agent) on 2 questions with keyword checks and an LLM judge; its report shows the judge rating a wrong answer 4/5. Replaced by `evals/agent_eval.py`. |

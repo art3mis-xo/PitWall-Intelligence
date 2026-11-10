@@ -20,6 +20,8 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 
 **Leak-free result.** The leak-free model matches a strong grid-position baseline (Spearman 0.667 vs 0.650 on 14 held-out 2026 races, 95% CI for the difference −0.018 to +0.055).
 
+**Agent evaluation.** On 24 generated questions it had not been tuned on, the chat agent chose the right tool for 96%, answered 88% correctly and grounded every number it stated in tool output (100%); before fixes from the first run, tool choice was 75% ([agent_eval_seed1.md](evals/results/agent_eval_seed1.md), [baseline](evals/results/agent_eval_baseline.md)).
+
 Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 58. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
 
 ## How It's Built
@@ -69,7 +71,7 @@ Developed with Python 3.12 and Node.js 22.
 ```bash
 python3.12 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt          # Apple silicon, to run evals/eval_llm.py: requirements-mac.txt
+pip install -r requirements.txt
 
 cd pitwall/frontend && npm ci && cd ../..
 ```
@@ -115,7 +117,7 @@ python evals/final_test.py       # frozen config, tested once on 2026
 python evals/paired_test.py      # bootstrap CI and Wilcoxon test vs the baseline
 ```
 
-`evals/eval_llm.py` scores a local Llama 3.1 8B (4-bit, via MLX) on two hand-written F1 questions, with keyword checks and an LLM judge. It does not evaluate the Groq agent used by the app.
+**Agent evaluation.** `python evals/agent_eval.py --seed N` runs the served chat agent (Groq) on 24 questions generated from the data. Expected answers are computed by code from the feature store and the predictor, and scoring is rule-based, with no LLM judge: right tool, right arguments, correct answer, and every number in the reply found in a tool output. Results: [baseline](evals/results/agent_eval_baseline.md), [after fixes](evals/results/agent_eval.md), [after fixes, unseen questions](evals/results/agent_eval_seed1.md).
 
 ## Retrain The Predictor
 
