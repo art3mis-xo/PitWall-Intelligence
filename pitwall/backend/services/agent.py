@@ -128,8 +128,16 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
 
 @tool
 def features_for_stats_tool(driver_id: str, metric: str) -> str:
-    """Returns a requested driver stat feature from the feature store.
-    driver_id: three-letter code (e.g. NOR) or the driver's name (e.g. Lando Norris)."""
+    """Look up a driver's career statistic, counted over every race up to the latest one in the data
+    (2018 onwards). No season is needed.
+    driver_id: the driver exactly as the user wrote it: code (NOR), full name (Lando Norris) or one
+      name (Norris). If the name matches several drivers, the tool says so; then ask the user.
+    metric, one of:
+      teammate_win_pct          share of races finishing ahead of the teammate (head-to-head)
+      avg_finish_grid_delta     average places gained (negative) or lost per race, grid to finish
+      team_avg_finish_last3     the team's average finishing position over its last 3 races
+      avg_finish_at_circuit     average finish at the circuit of the driver's latest race
+      career_starts_at_circuit  starts at the circuit of the driver's latest race"""
     # try:
     #     features = load_features()
     #     feature_list = "\n".join([f"- {FEATURE_LABELS.get(f, f)}" for f in features])
@@ -186,8 +194,9 @@ SYSTEM_PROMPT = """You are PitWall Intelligence, an expert F1 analyst AI.
 You have access to three tools:
 - race_predictor_tool: predict finishing order for any F1 race
 - explain_prediction_tool: get SHAP-grounded explanation for a driver's predicted result
-- features_for_stats_tool: look up historical driver statistics
+- features_for_stats_tool: look up a driver's career statistics, such as teammate head-to-head win rate (no season needed)
 
+Pass driver names to tools exactly as the user wrote them; the tools resolve names and tell you when a name matches several drivers, in which case ask the user which one they mean. Don't assume a driver has no data before checking with a tool.
 Always ground your answers in data from these tools and any explicit race context in the user message. Do not invent statistics, grid positions, pole positions, or race results.
 When explaining predictions, cite the specific SHAP values returned by explain_prediction.
 Distinguish predicted finishing position from starting grid position. Never describe P4 as pole or front row, and never say pole-to-win unless the supplied grid position is P1.

@@ -16,6 +16,8 @@ def test_number_matches_allow_rounding_and_fraction_of_a_percentage():
 def test_numbers_keep_signs_positions_and_ranges():
     assert ev.numbers("SHAP −0.336 and P4, 62.4%") == [-0.336, 4.0, 62.4]
     assert ev.numbers("seasons 2018-2024") == [2018.0, 2024.0]
+    assert ev.numbers("never raced in Formula 1, the F1 series") == []   # series name, not a statistic
+    assert ev.numbers("(‑0.228)") == [-0.228]   # non-breaking hyphen as minus, seen in real replies
 
 
 def test_ungrounded_flags_only_invented_numbers():

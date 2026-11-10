@@ -13,7 +13,7 @@ Scored per question, all automatically (no LLM judge):
   correct     the expected answer appears in the reply
   grounded    every number in the reply appears in a tool output or the question
 
-    python evals/agent_eval.py           # needs GROQ_API_KEY; about 25 questions
+    python evals/agent_eval.py [--seed N]   # needs GROQ_API_KEY; 24 questions per seed
 Writes evals/results/agent_eval.json and .md
 """
 import random
@@ -31,9 +31,13 @@ from langchain_core.messages import AIMessage, HumanMessage, ToolMessage  # noqa
 from pitwall.backend.services import agent  # noqa: E402
 from pitwall.backend.services.race_predictor import load_features, predict_race  # noqa: E402
 
-SEED, SEASON = 0, 2026
+SEASON = 2026
 PAUSE_S = 2.0          # stay under Groq's per-minute limits
 NUMBER = re.compile(r"\d+(?:\.\d+)?")
+# hyphen-minus plus the Unicode dashes LLMs write as minus signs (U+2010, U+2011 non-breaking
+# hyphen, U+2012, U+2013, U+2014, U+2212); v1 missed U+2011 and miscounted correct replies
+MINUS = "-‐‑‒–—−"
+SERIES_NAME = re.compile(r"\bF1\b|\bFormula\W*1\b|\bFormula One\b", re.IGNORECASE)
 
 
 def fold(text: str) -> str:
@@ -43,11 +47,11 @@ def fold(text: str) -> str:
 def numbers(text: str) -> list[float]:
     """Every number in the text, including inside "P4" or "R14". A minus sign (-, − or –) counts
     only when it starts a token, so a range like "2018-2024" stays two positive years."""
-    text = text.replace(",", "")
+    text = SERIES_NAME.sub(" ", text.replace(",", ""))   # the "1" in "F1" is not a statistic
     out = []
     for m in NUMBER.finditer(text):
         before = text[max(0, m.start() - 2):m.start()]
-        negative = len(before) >= 1 and before[-1] in "-−–" and (len(before) < 2 or not before[0].isalnum())
+        negative = len(before) >= 1 and before[-1] in MINUS and (len(before) < 2 or not before[0].isalnum())
         out.append(-float(m.group()) if negative else float(m.group()))
     return out
 
@@ -68,8 +72,8 @@ def ungrounded(reply: str, sources: str) -> list[float]:
 
 
 # ── cases: questions plus answers computed from the data ─────────────────────
-def build_cases() -> list[dict]:
-    rng = random.Random(SEED)
+def build_cases(seed: int = 0) -> list[dict]:
+    rng = random.Random(seed)
     df = load_features()
     season = df[df.season == SEASON]
     names = season.drop_duplicates("driver_id").set_index("driver_id")["driver_full_name"]
@@ -156,6 +160,7 @@ def run_case(case: dict) -> dict:
     if case["kind"] == "out_of_scope":   # right = says it can't answer, without inventing numbers
         correct = not missing
     return {**case, "reply": reply, "tool_calls": [{"name": c["name"], "args": c["args"]} for c in calls],
+            "tool_output": tool_text,
             "tool_ok": tool_ok, "args_ok": args_ok, "correct": correct,
             "grounded": not missing, "ungrounded_numbers": missing,
             "latency_s": round(latency, 2), "tokens": tokens}
@@ -167,7 +172,11 @@ def rate(rows, key) -> str:
 
 
 def main():
-    cases = build_cases()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seed", type=int, default=0, help="question set; 0 was used while fixing the agent")
+    seed = parser.parse_args().seed
+    cases = build_cases(seed)
     rows = []
     for i, case in enumerate(cases, 1):
         rows.append(run_case(case))
@@ -187,10 +196,10 @@ def main():
 
     import pandas as pd
     df = pd.read_csv(ROOT / "data" / "features.csv")
-    m = meta("python evals/agent_eval.py", df, agent_model=agent.llm.model_name, seed=SEED,
+    m = meta(f"python evals/agent_eval.py --seed {seed}", df, agent_model=agent.llm.model_name, seed=seed,
              labels="expected answers computed by code from data/features.csv and the predictor; no hand labels")
     lines = header("Agent evaluation (live LangGraph agent on Groq)", m) + [
-        f"Model `{m['agent_model']}`, temperature 0, {summary['cases']} questions generated from the data (seed {SEED}). "
+        f"Model `{m['agent_model']}`, temperature 0, {summary['cases']} questions generated from the data (seed {seed}). "
         "Expected answers are computed by code from the feature store and the predictor; scoring is rule-based, no LLM judge.",
         "",
         "| Metric | Result |", "|---|---|",
@@ -214,7 +223,7 @@ def main():
                                     ("incorrect", not r["correct"]),
                                     (f"ungrounded numbers {r['ungrounded_numbers']}", not r["grounded"])] if bad]
             lines.append(f"- **{r['kind']}** — {r['question']} → {', '.join(why)}. Reply: “{r['reply'][:160].replace(chr(10), ' ')}”")
-    write("agent_eval", {"meta": m, "summary": summary, "cases": rows}, lines)
+    write("agent_eval" if seed == 0 else f"agent_eval_seed{seed}", {"meta": m, "summary": summary, "cases": rows}, lines)
 
 
 if __name__ == "__main__":
