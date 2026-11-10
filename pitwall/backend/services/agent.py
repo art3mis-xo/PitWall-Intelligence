@@ -49,6 +49,23 @@ def resolve_driver(text: str) -> tuple[str | None, str]:
     return None, f"No driver called '{text}' in the dataset (2018 onwards)."
 
 
+# Units, so the LLM can't confuse a fraction with a percentage (0.105 % is not 10.5 %)
+FRACTION_AS_PERCENT = {"teammate_win_pct", "driver_dnf_rate_last10", "team_dnf_rate_last10",
+                       "circuit_wet_race_frequency"}
+ALREADY_PERCENT = {"quali_best_gap_pct"}
+
+
+def format_value(feature: str, value) -> str:
+    if value is None or value == "N/A":
+        return "unknown"
+    value = float(value)
+    if feature in FRACTION_AS_PERCENT:
+        return f"{value * 100:.1f}%"
+    if feature in ALREADY_PERCENT:
+        return f"{value:.3f}%"
+    return f"{round(value, 3):g}"
+
+
 def _grid_text(result: dict) -> str:
     if result["grid_position"] is None:
         return "not known yet (qualifying has not taken place)"
@@ -87,7 +104,7 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
             return f"No prediction found for driver {driver_id} ({code}) in {season} Round {round_num}"
  
         factors_text = "\n".join([
-            f"  - {f['label']}: value {f['value'] if f['value'] is not None else 'unknown'}"
+            f"  - {f['label']}: value {format_value(f['feature'], f['value'])}"
             f"{' (estimated from recent races)' if f['estimated'] else ''}; "
             f"SHAP contribution {f['shap_value']:+.3f} "
             f"({'favours better finish' if f['shap_value'] < 0 else 'hurts finish'})"
@@ -140,7 +157,7 @@ def features_for_stats_tool(driver_id: str, metric: str) -> str:
         label  = FEATURE_LABELS.get(metric, metric)
  
         return (
-            f"{driver_id.upper()} — {label}: {round(float(value), 3) if value != 'N/A' else 'N/A'}\n"
+            f"{driver_id.upper()} — {label}: {format_value(metric, value)}\n"
             f"(Based on {len(driver_rows)} races in dataset, latest: "
             f"{int(latest['season'])} R{int(latest['round'])})"
         )
