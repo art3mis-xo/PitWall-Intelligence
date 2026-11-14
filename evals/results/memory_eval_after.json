@@ -1,0 +1,501 @@
+{
+  "meta": {
+    "date": "2026-11-14T12:44:07+00:00",
+    "git_commit": "b6c6ce0eece01a65adcdd01153de6a755a519c55",
+    "command": "python evals/memory_eval.py --tag after",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "agent_model": "openai/gpt-oss-20b",
+    "seed": 21
+  },
+  "summary": {
+    "conversations": 8,
+    "errors": 0,
+    "tool_ok": "8/8",
+    "args_ok": "6/6",
+    "correct": "8/8",
+    "grounded": "7/8",
+    "input_tokens_turn1": 1711,
+    "input_tokens_turn10": 1729
+  },
+  "conversations": [
+    {
+      "kind": "driver_followup",
+      "turns": [
+        "What is Valtteri Bottas's teammate head-to-head win percentage?",
+        "And how many places does he gain or lose per race on average?"
+      ],
+      "tool": "features_for_stats_tool",
+      "driver": "BOT",
+      "expect_abs_number": 0.895,
+      "turn1": {
+        "question": "What is Valtteri Bottas's teammate head-to-head win percentage?",
+        "answer": "Valtteri\u202fBottas\u2019s teammate head\u2011to\u2011head win percentage is **38.9\u202f%** (based on 163 races up to 2026 R14).",
+        "reply": "Valtteri\u202fBottas\u2019s teammate head\u2011to\u2011head win percentage is **38.9\u202f%** (based on 163 races up to 2026 R14).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Valtteri Bottas",
+              "metric": "teammate_win_pct"
+            },
+            "id": "fc_b6668b54-9fea-4366-8777-bff7d7b3cad3",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 1.72,
+        "input_tokens": 1557,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "And how many places does he gain or lose per race on average?",
+        "answer": "Valtteri\u202fBottas averages **+0.90 places per race** (i.e., he gains about nine\u2011tenths of a place from grid to finish).",
+        "reply": "Valtteri\u202fBottas averages **+0.90 places per race** (i.e., he gains about nine\u2011tenths of a place from grid to finish).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Valtteri Bottas",
+              "metric": "avg_finish_grid_delta"
+            },
+            "id": "fc_f2b7e0a6-8369-485c-9b7c-dffbd09ffdbc",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 1.29,
+        "input_tokens": 1675,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "driver_followup",
+      "turns": [
+        "What is Arvid Lindblad's teammate head-to-head win percentage?",
+        "And how many places does he gain or lose per race on average?"
+      ],
+      "tool": "features_for_stats_tool",
+      "driver": "LIN",
+      "expect_abs_number": 0.154,
+      "turn1": {
+        "question": "What is Arvid Lindblad's teammate head-to-head win percentage?",
+        "answer": "Arvid Lindblad\u2019s teammate head\u2011to\u2011head win percentage is **30.8\u202f%** (based on 14 races up to 2026 R14).",
+        "reply": "Arvid Lindblad\u2019s teammate head\u2011to\u2011head win percentage is **30.8\u202f%** (based on 14 races up to 2026 R14).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Arvid Lindblad",
+              "metric": "teammate_win_pct"
+            },
+            "id": "fc_2c8e1c6c-69f8-4714-840e-ec10308d94f7",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 1.03,
+        "input_tokens": 1554,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "And how many places does he gain or lose per race on average?",
+        "answer": "Arvid Lindblad averages **+0.15 places per race** (i.e., he gains about 0.15 positions from grid to finish on average).",
+        "reply": "Arvid Lindblad averages **+0.15 places per race** (i.e., he gains about 0.15 positions from grid to finish on average).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Arvid Lindblad",
+              "metric": "avg_finish_grid_delta"
+            },
+            "id": "fc_fe0d2157-d322-4d5b-aabe-96fdf7daa038",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 0.72,
+        "input_tokens": 1666,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "driver_followup",
+      "turns": [
+        "What is Max Verstappen's teammate head-to-head win percentage?",
+        "And how many places does he gain or lose per race on average?"
+      ],
+      "tool": "features_for_stats_tool",
+      "driver": "VER",
+      "expect_abs_number": 0.425,
+      "turn1": {
+        "question": "What is Max Verstappen's teammate head-to-head win percentage?",
+        "answer": "Max Verstappen\u2019s teammate head\u2011to\u2011head win percentage is **83.3\u202f%** (based on 187 races up to 2026 R14).",
+        "reply": "Max Verstappen\u2019s teammate head\u2011to\u2011head win percentage is **83.3\u202f%** (based on 187 races up to 2026 R14).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Max Verstappen",
+              "metric": "teammate_win_pct"
+            },
+            "id": "fc_fa780158-9ea8-4a13-a785-ae9c969a7558",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 1.32,
+        "input_tokens": 1551,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "And how many places does he gain or lose per race on average?",
+        "answer": "Max Verstappen gains an average of **0.43 places per race** (i.e., he finishes about 0.43 places ahead of his grid position).",
+        "reply": "Max Verstappen gains an average of **0.43 places per race** (i.e., he finishes about 0.43 places ahead of his grid position).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Max Verstappen",
+              "metric": "avg_finish_grid_delta"
+            },
+            "id": "fc_48136e4d-d49a-4d3c-ac18-d57a5d47d57f",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 1.2,
+        "input_tokens": 1661,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "driver_followup",
+      "turns": [
+        "What is Lance Stroll's teammate head-to-head win percentage?",
+        "And how many places does he gain or lose per race on average?"
+      ],
+      "tool": "features_for_stats_tool",
+      "driver": "STR",
+      "expect_abs_number": 1.372,
+      "turn1": {
+        "question": "What is Lance Stroll's teammate head-to-head win percentage?",
+        "answer": "Lance Stroll\u2019s teammate head\u2011to\u2011head win percentage is **38.0\u202f%** (based on 185 races up to 2026 R14).",
+        "reply": "Lance Stroll\u2019s teammate head\u2011to\u2011head win percentage is **38.0\u202f%** (based on 185 races up to 2026 R14).",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lance Stroll",
+              "metric": "teammate_win_pct"
+            },
+            "id": "fc_b0b94577-ed25-4944-b770-d3d292587a51",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 6.52,
+        "input_tokens": 1552,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "And how many places does he gain or lose per race on average?",
+        "answer": "Lance Stroll averages **\u20131.37 places per race** (i.e., he gains about 1.4 positions from grid to finish on average).",
+        "reply": "Lance Stroll averages **\u20131.37 places per race** (i.e., he gains about 1.4 positions from grid to finish on average).\n\n_Note: 1.4 is not from PitWall's data or model, so treat it as unverified._",
+        "calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lance Stroll",
+              "metric": "avg_finish_grid_delta"
+            },
+            "id": "fc_d3751df7-60d4-4c2e-8243-332220db1f00",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 8.72,
+        "input_tokens": 1664,
+        "grounded": false
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": false
+    },
+    {
+      "kind": "why_winner",
+      "turns": [
+        "Who does the model predict to win round 5 of 2026?",
+        "Why is that driver predicted to win?"
+      ],
+      "tool": "explain_prediction_tool",
+      "driver": "ANT",
+      "season": 2026,
+      "round": 5,
+      "turn1": {
+        "question": "Who does the model predict to win round 5 of 2026?",
+        "answer": "The model predicts **Kimi Antonelli (ANT)** to win round\u202f5 of 2026.",
+        "reply": "The model predicts **Kimi Antonelli (ANT)** to win round\u202f5 of 2026.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 5,
+              "season": 2026
+            },
+            "id": "fc_b79e0240-0889-47a6-88e3-a30b32fae829",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 6.75,
+        "input_tokens": 1712,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "Why is that driver predicted to win?",
+        "answer": "Kimi Antonelli (ANT) is predicted to win round\u202f5 of 2026 mainly because he starts from **P2** on the grid. The SHAP explanation shows that his qualifying performance is the strongest driver of the prediction:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Qualifying position | 2 | **\u20110.844** |\n| Grid position | 2 | **\u20110.323** |\n| Q3 gap to pole (s) | 0.068 | **\u20110.350** |\n| Quali gap to pole (%) | 0.094\u202f% | **\u20110.241** |\n| Team avg finish (last\u202f5 races) | 3.6 | **\u20110.147** |\n\nAll five contributions are negative, meaning they push the predicted finish higher (closer to P1). The largest effect comes from the qualifying position itself, followed by the small time gaps to pole. His team\u2019s recent average finish also helps, but to a lesser extent. Together, these factors give the model a high probability that Antonelli will convert his P2 start into a race win.",
+        "reply": "Kimi Antonelli (ANT) is predicted to win round\u202f5 of 2026 mainly because he starts from **P2** on the grid. The SHAP explanation shows that his qualifying performance is the strongest driver of the prediction:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Qualifying position | 2 | **\u20110.844** |\n| Grid position | 2 | **\u20110.323** |\n| Q3 gap to pole (s) | 0.068 | **\u20110.350** |\n| Quali gap to pole (%) | 0.094\u202f% | **\u20110.241** |\n| Team avg finish (last\u202f5 races) | 3.6 | **\u20110.147** |\n\nAll five contributions are negative, meaning they push the predicted finish higher (closer to P1). The largest effect comes from the qualifying position itself, followed by the small time gaps to pole. His team\u2019s recent average finish also helps, but to a lesser extent. Together, these factors give the model a high probability that Antonelli will convert his P2 start into a race win.",
+        "calls": [
+          {
+            "name": "explain_prediction_tool",
+            "args": {
+              "driver_id": "Kimi Antonelli",
+              "round_num": 5,
+              "season": 2026
+            },
+            "id": "fc_e8d60523-744a-4d0a-89cd-ef5887f45783",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 6.51,
+        "input_tokens": 1832,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "why_winner",
+      "turns": [
+        "Who does the model predict to win round 8 of 2026?",
+        "Why is that driver predicted to win?"
+      ],
+      "tool": "explain_prediction_tool",
+      "driver": "RUS",
+      "season": 2026,
+      "round": 8,
+      "turn1": {
+        "question": "Who does the model predict to win round 8 of 2026?",
+        "answer": "George\u202fRussell (RUS) is predicted to win round\u202f8 of 2026.",
+        "reply": "George\u202fRussell (RUS) is predicted to win round\u202f8 of 2026.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 8,
+              "season": 2026
+            },
+            "id": "fc_a600efa3-40b6-4a72-a7d3-5e2464473cc0",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 9.12,
+        "input_tokens": 1711,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "Why is that driver predicted to win?",
+        "answer": "George\u202fRussell (RUS) is predicted to win round\u202f8 of 2026 because the model\u2019s SHAP\u2011based explanation shows that his starting position and qualifying performance give him the strongest advantage.\n\n* **Grid position (P1)** \u2013 The model assigns a SHAP contribution of **\u20110.326** for starting from pole, which is a large positive influence on the predicted finish.  \n* **Qualifying position (P1)** \u2013 A contribution of **\u20110.842** further boosts the likelihood of a win, reflecting the advantage of being the fastest in Q3.  \n* **Q3 gap to pole (s)** \u2013 With a gap of **0\u202fs** (no time difference), the SHAP value is **\u20110.338**, again favouring a top finish.  \n* **Qualifying gap to pole (%)** \u2013 A 0\u202f% gap gives a contribution of **\u20110.172**, reinforcing the pole\u2011to\u2011win advantage.  \n* **Driver points in the last 5 races (8.4)** \u2013 Even though this is a smaller effect, the SHAP value of **\u20110.158** still favours a better result.\n\nAll of these factors combine to give Russell a predicted finish of **P1**.",
+        "reply": "George\u202fRussell (RUS) is predicted to win round\u202f8 of 2026 because the model\u2019s SHAP\u2011based explanation shows that his starting position and qualifying performance give him the strongest advantage.\n\n* **Grid position (P1)** \u2013 The model assigns a SHAP contribution of **\u20110.326** for starting from pole, which is a large positive influence on the predicted finish.  \n* **Qualifying position (P1)** \u2013 A contribution of **\u20110.842** further boosts the likelihood of a win, reflecting the advantage of being the fastest in Q3.  \n* **Q3 gap to pole (s)** \u2013 With a gap of **0\u202fs** (no time difference), the SHAP value is **\u20110.338**, again favouring a top finish.  \n* **Qualifying gap to pole (%)** \u2013 A 0\u202f% gap gives a contribution of **\u20110.172**, reinforcing the pole\u2011to\u2011win advantage.  \n* **Driver points in the last 5 races (8.4)** \u2013 Even though this is a smaller effect, the SHAP value of **\u20110.158** still favours a better result.\n\nAll of these factors combine to give Russell a predicted finish of **P1**.",
+        "calls": [
+          {
+            "name": "explain_prediction_tool",
+            "args": {
+              "driver_id": "George Russell",
+              "round_num": 8,
+              "season": 2026
+            },
+            "id": "fc_b21fd9c4-9545-437d-8df1-2571ce9f17ce",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 11.72,
+        "input_tokens": 1824,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "second_place",
+      "turns": [
+        "Who does the model predict to win round 4 of 2026?",
+        "Who is predicted to finish second?"
+      ],
+      "tool": null,
+      "expect_text": "Verstappen",
+      "turn1": {
+        "question": "Who does the model predict to win round 4 of 2026?",
+        "answer": "Kimi\u202fAntonelli (ANT) is predicted to win round\u202f4 of 2026.",
+        "reply": "Kimi\u202fAntonelli (ANT) is predicted to win round\u202f4 of 2026.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 4,
+              "season": 2026
+            },
+            "id": "fc_7fa2a2d8-6181-4232-ac3a-7a5d53d5f5a1",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 7.28,
+        "input_tokens": 1707,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "Who is predicted to finish second?",
+        "answer": "Max\u202fVerstappen (VER) is predicted to finish second.",
+        "reply": "Max\u202fVerstappen (VER) is predicted to finish second.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 4,
+              "season": 2026
+            },
+            "id": "fc_be5e6b44-b71c-4cc2-8f46-4215fae0381f",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 15.82,
+        "input_tokens": 1781,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": null,
+      "correct": true,
+      "grounded": true
+    },
+    {
+      "kind": "second_place",
+      "turns": [
+        "Who does the model predict to win round 13 of 2026?",
+        "Who is predicted to finish second?"
+      ],
+      "tool": null,
+      "expect_text": "Verstappen",
+      "turn1": {
+        "question": "Who does the model predict to win round 13 of 2026?",
+        "answer": "The model predicts **George Russell (RUS)** to win round\u202f13 of 2026.",
+        "reply": "The model predicts **George Russell (RUS)** to win round\u202f13 of 2026.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            },
+            "id": "fc_e232426d-51e3-45c7-9a88-b24fe321bfe8",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 11.63,
+        "input_tokens": 1709,
+        "grounded": true
+      },
+      "turn2": {
+        "question": "Who is predicted to finish second?",
+        "answer": "**Max\u202fVerstappen (VER)** is predicted to finish second in round\u202f13 of 2026.",
+        "reply": "**Max\u202fVerstappen (VER)** is predicted to finish second in round\u202f13 of 2026.",
+        "calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            },
+            "id": "fc_1eba694e-f703-46ea-aa2b-b25fe7c80e51",
+            "type": "tool_call"
+          }
+        ],
+        "seconds": 14.4,
+        "input_tokens": 1783,
+        "grounded": true
+      },
+      "tool_ok": true,
+      "args_ok": null,
+      "correct": true,
+      "grounded": true
+    }
+  ],
+  "growth": [
+    {
+      "question": "Who does the model predict to win round 9 of 2026?",
+      "input_tokens": 1711,
+      "seconds": 11.2
+    },
+    {
+      "question": "Why is that driver predicted to win?",
+      "input_tokens": 1827,
+      "seconds": 5.81
+    },
+    {
+      "question": "Who is predicted second?",
+      "input_tokens": 2339,
+      "seconds": 10.31
+    },
+    {
+      "question": "What is Lando Norris's teammate head-to-head win percentage?",
+      "input_tokens": 2275,
+      "seconds": 15.69
+    },
+    {
+      "question": "And how many places does he gain or lose per race on average?",
+      "input_tokens": 2393,
+      "seconds": 3.4
+    },
+    {
+      "question": "Who does the model predict to win round 13 of 2026?",
+      "input_tokens": 2675,
+      "seconds": 14.68
+    },
+    {
+      "question": "Why?",
+      "input_tokens": 2781,
+      "seconds": 12.62
+    },
+    {
+      "question": "What is Verstappen's teammate head-to-head win percentage?",
+      "input_tokens": 3157,
+      "seconds": 13.34
+    },
+    {
+      "question": "Compare that with Norris.",
+      "input_tokens": 1592,
+      "seconds": 2.74
+    },
+    {
+      "question": "Summarise what we discussed in two sentences.",
+      "input_tokens": 1729,
+      "seconds": 11.68
+    }
+  ]
+}

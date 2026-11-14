@@ -11,3 +11,4 @@ Each row is one saved run of `evals/agent_eval.py`. Seed 0 is the question set u
 | v4-tool-budget (seed1) | 24 | 100% | 100% | 92% | 96% | 3.2 / 10.5 | 1.17 / 2 |
 | v5-guardrails-low-reasoning (seed0) | 24 | 100% | 100% | 96% | 100% | 4.2 / 10.9 | 0.92 / 1 |
 | v5-guardrails-low-reasoning (seed1) | 24 | 100% | 100% | 92% | 100% | 7.4 / 11.2 | 0.96 / 2 |
+| v6-memory-ids (seed1) | 24 | 100% | 100% | 92% | 92% | 5.7 / 9.1 | 0.92 / 1 |

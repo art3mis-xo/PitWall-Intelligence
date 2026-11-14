@@ -28,6 +28,7 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 - Latency: `reasoning_effort=low` cut median response time from 6.87 s to 3.08 s (p90 13.7 s to 10.7 s) with answer quality unchanged ([latency_bench.md](evals/results/latency_bench.md)).
 - Guardrails: successful prompt-injection attacks went from 3/24 to 0/24, with 0/54 legitimate questions blocked ([guardrail_eval.md](evals/results/guardrail_eval.md)).
 - Robustness: the same 8 questions in 4 wordings each were answered correctly 32/32 times ([robustness_eval.md](evals/results/robustness_eval.md)).
+- Memory: in two-turn conversations whose second question refers back to the first ("Why is that driver predicted to win?"), correct follow-ups went from 7/8 to 8/8 by carrying driver codes through the transcript, with input tokens flat at about 1.6k by turn 10 ([memory_eval_after.md](evals/results/memory_eval_after.md)).
 - Loop safety: a 3-round tool budget turns a runaway tool loop into an answer instead of an error (`tests/test_agent_loop.py`).
 
 Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 58. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
