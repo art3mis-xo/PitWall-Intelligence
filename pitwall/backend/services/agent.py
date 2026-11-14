@@ -97,7 +97,7 @@ def race_predictor_tool(season: int, round_num: int) -> str:
     results = predict_race(season, round_num)
     top10 = results[:10]
     summary = "\n".join([
-            f"P{r['predicted_rank']}: {r['driver_full_name']} ({r['team_id']}) "
+            f"P{r['predicted_rank']}: {r['driver_full_name']} ({r['driver_id']}, {r['team_id']}) "
             f"[grid: {_grid_text(r)}]"
             for r in top10
         ])
@@ -126,7 +126,7 @@ def explain_prediction_tool(season: int, round_num: int, driver_id: str) -> str:
         ])
  
         return (
-            f"SHAP explanation for {driver_result['driver_full_name']} "
+            f"SHAP explanation for {driver_result['driver_full_name']} ({driver_result['driver_id']}) "
             f"(predicted P{driver_result['predicted_rank']}):\n\n"
             f"Key factors driving this prediction:\n{factors_text}\n\n"
             f"Grid position: {_grid_text(driver_result)}\n"
@@ -210,6 +210,7 @@ You have access to three tools:
 - explain_prediction_tool: get SHAP-grounded explanation for a driver's predicted result
 - features_for_stats_tool: look up a driver's career statistics, such as teammate head-to-head win rate (no season needed). Three-letter codes like HAD or NOR are driver codes.
 
+When you name a driver in an answer, add their code in brackets, e.g. Kimi Antonelli (ANT), so later questions can refer back to them. When a question points to a driver from earlier in the conversation ("that driver", "he"), pass the code or full name shown earlier; never make up a code.
 Pass driver names to tools exactly as the user wrote them; the tools resolve names and tell you when a name matches several drivers, in which case ask the user which one they mean. Don't assume a driver has no data before checking with a tool.
 Always ground your answers in data from these tools and any explicit race context in the user message. Do not invent statistics, grid positions, pole positions, or race results.
 When explaining predictions, cite the specific SHAP values returned by explain_prediction.
