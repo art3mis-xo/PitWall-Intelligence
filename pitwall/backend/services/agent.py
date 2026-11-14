@@ -10,7 +10,8 @@ from typing_extensions import TypedDict
 from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode
 import operator
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage
+from .guardrails import grounding_note, screen_input, ungrounded
 
 load_dotenv() 
 
@@ -236,16 +237,36 @@ def should_continue(state: AgentState):
         return "tools"
     return "end"
 
+def guard_node(state: AgentState):
+    # Output guardrail: numbers in the final answer that no tool returned (and the user didn't
+    # say) get a visible warning. Flag rather than regenerate: the chat streams, so the user has
+    # already seen this answer when the check runs; a second answer would arrive on top of it.
+    last = state["messages"][-1]
+    if not isinstance(last, AIMessage) or last.tool_calls:
+        return {}
+    sources = "\n".join(str(m.content) for m in state["messages"] if isinstance(m, (ToolMessage, HumanMessage)))
+    found = ungrounded(str(last.content), sources)
+    if not found:
+        return {}
+    note = grounding_note(found)
+    return {"messages": [AIMessage(content=str(last.content) + note,
+                                   additional_kwargs={"guardrail_flagged": found, "guardrail_note": note})]}
+
 graph = StateGraph(AgentState)
 graph.add_node("agent", agent_node)
 graph.add_node("tools", tool_node)
+graph.add_node("guard", guard_node)
 graph.set_entry_point("agent")
 graph.add_conditional_edges("agent",should_continue,{"tools":"tools",
-                                                     "end": END})
+                                                     "end": "guard"})
+graph.add_edge("guard", END)
 graph.add_edge("tools","agent")
 app = graph.compile()
 
 async def chat(message: str, history: list[dict] | None = None) -> str:
+    refusal = screen_input(message)   # input guardrail: no LLM call for injection attempts
+    if refusal:
+        return refusal
     messages = []
     if history:
         for h in history:
@@ -260,6 +281,10 @@ async def chat(message: str, history: list[dict] | None = None) -> str:
 
 
 async def chat_stream(message: str, history: list[dict] | None = None):
+    refusal = screen_input(message)
+    if refusal:
+        yield refusal
+        return
     messages = []
 
     if history:
@@ -276,3 +301,6 @@ async def chat_stream(message: str, history: list[dict] | None = None):
             chunk = event["data"]["chunk"]
             if hasattr(chunk, "content") and chunk.content:
                 yield chunk.content
+        elif event["event"] == "on_chain_end" and event.get("name") == "guard":
+            for m in (event["data"].get("output") or {}).get("messages", []):
+                yield m.additional_kwargs.get("guardrail_note", "")

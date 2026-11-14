@@ -17,7 +17,6 @@ Scored per question, all automatically (no LLM judge):
 Writes evals/results/agent_eval.json and .md
 """
 import random
-import re
 import statistics
 import sys
 import time
@@ -33,42 +32,12 @@ from pitwall.backend.services.race_predictor import load_features, predict_race 
 
 SEASON = 2026
 PAUSE_S = 2.0          # stay under Groq's per-minute limits
-NUMBER = re.compile(r"\d+(?:\.\d+)?")
-# hyphen-minus plus the Unicode dashes LLMs write as minus signs (U+2010, U+2011 non-breaking
-# hyphen, U+2012, U+2013, U+2014, U+2212); v1 missed U+2011 and miscounted correct replies
-MINUS = "-‐‑‒–—−"
-SERIES_NAME = re.compile(r"\bF1\b|\bFormula\W*1\b|\bFormula One\b", re.IGNORECASE)
+# Number parsing and grounding are shared with the app's output guardrail
+from pitwall.backend.services.guardrails import matches as _matches, numbers, ungrounded  # noqa: E402
 
 
 def fold(text: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)).casefold()
-
-
-def numbers(text: str) -> list[float]:
-    """Every number in the text, including inside "P4" or "R14". A minus sign (-, − or –) counts
-    only when it starts a token, so a range like "2018-2024" stays two positive years."""
-    text = SERIES_NAME.sub(" ", text.replace(",", ""))   # the "1" in "F1" is not a statistic
-    out = []
-    for m in NUMBER.finditer(text):
-        before = text[max(0, m.start() - 2):m.start()]
-        negative = len(before) >= 1 and before[-1] in MINUS and (len(before) < 2 or not before[0].isalnum())
-        out.append(-float(m.group()) if negative else float(m.group()))
-    return out
-
-
-def _matches(n: float, source: float) -> bool:
-    # equal up to rounding (62.4 vs 62.42, 0.62 vs 0.624), or a stated percentage written
-    # as a fraction (62.4% -> 0.624). Not the reverse: tools print percentages explicitly,
-    # so turning 0.105% into 10.5% is an error the grader must catch.
-    def close(a, b):
-        return abs(a - b) <= (0.051 if abs(b) >= 1 else 0.0051)
-    return close(n, source) or close(n, source / 100)
-
-
-def ungrounded(reply: str, sources: str) -> list[float]:
-    """Numbers in the reply that appear nowhere in the tool outputs or the question."""
-    pool = numbers(sources)
-    return [n for n in numbers(reply) if not any(_matches(n, s) for s in pool)]
 
 
 # ── cases: questions plus answers computed from the data ─────────────────────
@@ -133,7 +102,10 @@ def run_case(case: dict) -> dict:
     msgs = out["messages"]
     calls = [c for m in msgs if isinstance(m, AIMessage) for c in (m.tool_calls or [])]
     tool_text = "\n".join(str(m.content) for m in msgs if isinstance(m, ToolMessage))
-    reply = str(msgs[-1].content)
+    last = msgs[-1]
+    flagged = last.additional_kwargs.get("guardrail_flagged") if isinstance(last, AIMessage) else None
+    reply = str(last.content)                                  # what the user sees
+    answer = str(msgs[-2].content) if flagged else reply       # what the model wrote, before the guard
     tokens = sum((m.usage_metadata or {}).get("total_tokens", 0) for m in msgs if isinstance(m, AIMessage))
 
     expected = case["tool"]
@@ -149,20 +121,22 @@ def run_case(case: dict) -> dict:
             "driver" not in case or agent.resolve_driver(str(a.get("driver_id", "")))[0] == case["driver"],
         ])
 
-    folded = fold(reply)
+    folded = fold(answer)
     correct = all(fold(t) in folded for t in case.get("expect_text", []))
     if "expect_number" in case:
-        correct = any(_matches(n, case["expect_number"]) for n in numbers(reply))
+        correct = any(_matches(n, case["expect_number"]) for n in numbers(answer))
     if case.get("expect_no_value"):   # ambiguous: naming both drivers is right, quoting a value is not
-        correct = correct and not numbers(reply)
+        correct = correct and not numbers(answer)
 
-    missing = ungrounded(reply, tool_text + "\n" + case["question"])
+    missing = ungrounded(answer, tool_text + "\n" + case["question"])
+    unflagged = [n for n in missing if n not in (flagged or [])]
     if case["kind"] == "out_of_scope":   # right = says it can't answer, without inventing numbers
         correct = not missing
     return {**case, "reply": reply, "tool_calls": [{"name": c["name"], "args": c["args"]} for c in calls],
             "tool_output": tool_text,
             "tool_ok": tool_ok, "args_ok": args_ok, "correct": correct,
             "grounded": not missing, "ungrounded_numbers": missing,
+            "guard_flagged": bool(flagged), "shown_unflagged": not unflagged,
             "latency_s": round(latency, 2), "tokens": tokens}
 
 
@@ -190,6 +164,7 @@ def main():
     summary = {"cases": len(rows), "errors": len(rows) - len(ok),
                "tool_selection": rate(ok, "tool_ok"), "arguments": rate(ok, "args_ok"),
                "correct": rate(ok, "correct"), "grounded": rate(ok, "grounded"),
+               "no_unflagged_ungrounded": rate(ok, "shown_unflagged"),
                "latency_median_s": round(statistics.median(lat), 2),
                "latency_p90_s": round(lat[int(0.9 * (len(lat) - 1))], 2),
                "tokens_median": int(statistics.median(r["tokens"] for r in ok)),
@@ -208,7 +183,8 @@ def main():
         f"| Right tool chosen | {summary['tool_selection']} |",
         f"| Right arguments (season, round, driver) | {summary['arguments']} |",
         f"| Correct answer | {summary['correct']} |",
-        f"| Every number grounded in tool output | {summary['grounded']} |",
+        f"| Every number grounded in tool output (model's answer) | {summary['grounded']} |",
+        f"| Replies with no unverified number shown unflagged (after output guardrail) | {summary['no_unflagged_ungrounded']} |",
         f"| Latency, median / p90 | {summary['latency_median_s']} s / {summary['latency_p90_s']} s |",
         f"| Tokens per question, median | {summary['tokens_median']} |",
         f"| Tool calls per question, mean / max | {summary['tool_calls_mean']} / {summary['tool_calls_max']} |",
