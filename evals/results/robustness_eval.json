@@ -1,0 +1,966 @@
+{
+  "meta": {
+    "date": "2026-11-14T12:29:00+00:00",
+    "git_commit": "559555e92a553e2591fc41fc5f4e7a6c0d133e65",
+    "command": "python evals/robustness_eval.py",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "agent_model": "openai/gpt-oss-20b",
+    "seed": 11
+  },
+  "summary": {
+    "items": 8,
+    "questions": 32,
+    "errors": 0,
+    "accuracy": "32/32",
+    "consistency": "8/8"
+  },
+  "by_wording": [
+    "8/8",
+    "8/8",
+    "8/8",
+    "8/8"
+  ],
+  "groups": [
+    [
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "NOR",
+        "expect_number": 62.4,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "reply": "Lando\u202fNorris\u2019s teammate head\u2011to\u2011head win percentage is **62.4\u202f%** (based on 166 races up to the 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lando Norris",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "NOR \u2014 Teammate H2H win % (to date): 62.4%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.12,
+        "tokens": 1510
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "NOR",
+        "expect_number": 62.4,
+        "question": "How often does Lando Norris beat their teammate?",
+        "reply": "Lando Norris has finished ahead of his teammate in about **62.4\u202f%** of the races he has entered (166 races up to 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lando Norris",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "NOR \u2014 Teammate H2H win % (to date): 62.4%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 9.78,
+        "tokens": 1499
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "NOR",
+        "expect_number": 62.4,
+        "question": "Lando Norris vs teammate: what's the head-to-head win rate?",
+        "reply": "Lando Norris has a teammate head\u2011to\u2011head win rate of **62.4\u202f%** (based on 166 races up to 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lando Norris",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "NOR \u2014 Teammate H2H win % (to date): 62.4%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.78,
+        "tokens": 1521
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "NOR",
+        "expect_number": 62.4,
+        "question": "Give me Lando Norris's head-to-head record against teammates as a percentage.",
+        "reply": "Lando\u202fNorris\u2019s head\u2011to\u2011head win percentage against his teammates is **62.4\u202f%** (based on 166 races up to 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Lando Norris",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "NOR \u2014 Teammate H2H win % (to date): 62.4%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 9.31,
+        "tokens": 1533
+      }
+    ],
+    [
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PIA",
+        "expect_number": 34.9,
+        "question": "What is Piastri's teammate head-to-head win percentage?",
+        "reply": "PIA\u2019s teammate head\u2011to\u2011head win percentage is **34.9\u202f%** (based on 84 races up to 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Piastri",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PIA \u2014 Teammate H2H win % (to date): 34.9%\n(Based on 84 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 10.27,
+        "tokens": 1521
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PIA",
+        "expect_number": 34.9,
+        "question": "How often does Piastri beat their teammate?",
+        "reply": "PIA has a teammate head\u2011to\u2011head win rate of **34.9\u202f%** (based on 84 races up to 2026\u202fR14). This means Piastri finishes ahead of his teammate roughly one\u2011third of the time.",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Piastri",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PIA \u2014 Teammate H2H win % (to date): 34.9%\n(Based on 84 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 0.91,
+        "tokens": 1520
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PIA",
+        "expect_number": 34.9,
+        "question": "Piastri vs teammate: what's the head-to-head win rate?",
+        "reply": "Piastri\u2019s head\u2011to\u2011head win rate against his teammate is **34.9\u202f%** (based on 84 races up to 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Piastri",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PIA \u2014 Teammate H2H win % (to date): 34.9%\n(Based on 84 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 2.16,
+        "tokens": 1526
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PIA",
+        "expect_number": 34.9,
+        "question": "Give me Piastri's head-to-head record against teammates as a percentage.",
+        "reply": "Lando\u202fPiastri\u2019s head\u2011to\u2011head win percentage against his teammates is **34.9\u202f%** (based on 84 races up to the 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Piastri",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PIA \u2014 Teammate H2H win % (to date): 34.9%\n(Based on 84 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 5.47,
+        "tokens": 1535
+      }
+    ],
+    [
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PER",
+        "expect_number": 36.2,
+        "question": "What is Sergio Perez's teammate head-to-head win percentage?",
+        "reply": "Sergio\u202fPerez\u2019s teammate head\u2011to\u2011head win percentage is **36.2\u202f%** (based on 161 races up to the latest 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Sergio Perez",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PER \u2014 Teammate H2H win % (to date): 36.2%\n(Based on 161 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 5.09,
+        "tokens": 1523
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PER",
+        "expect_number": 36.2,
+        "question": "How often does Sergio Perez beat their teammate?",
+        "reply": "Sergio\u202fPerez has finished ahead of his teammate in about **36.2\u202f%** of the races he\u2019s entered (161 races up to 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Sergio Perez",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PER \u2014 Teammate H2H win % (to date): 36.2%\n(Based on 161 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 1.95,
+        "tokens": 1504
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PER",
+        "expect_number": 36.2,
+        "question": "Sergio Perez vs teammate: what's the head-to-head win rate?",
+        "reply": "Sergio\u202fPerez\u2019s teammate\u2011to\u2011teammate head\u2011to\u2011head win rate is **36.2\u202f%** (based on 161 races up to 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Sergio Perez",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PER \u2014 Teammate H2H win % (to date): 36.2%\n(Based on 161 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 9.47,
+        "tokens": 1534
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "PER",
+        "expect_number": 36.2,
+        "question": "Give me Sergio Perez's head-to-head record against teammates as a percentage.",
+        "reply": "Sergio\u202fPerez\u2019s head\u2011to\u2011head win percentage against his teammates (across all races up to the latest data) is **36.2\u202f%**.",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Sergio Perez",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "PER \u2014 Teammate H2H win % (to date): 36.2%\n(Based on 161 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 6.43,
+        "tokens": 1528
+      }
+    ],
+    [
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "RUS",
+        "expect_number": 61.8,
+        "question": "What is Russell's teammate head-to-head win percentage?",
+        "reply": "Russell\u2019s teammate head\u2011to\u2011head win percentage is **61.8\u202f%** (based on 166 races up to the 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Russell",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "RUS \u2014 Teammate H2H win % (to date): 61.8%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 5.93,
+        "tokens": 1512
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "RUS",
+        "expect_number": 61.8,
+        "question": "How often does Russell beat their teammate?",
+        "reply": "Russell has beaten their teammate in 61.8\u202f% of the races they\u2019ve contested together (166 races up to 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Russell",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "RUS \u2014 Teammate H2H win % (to date): 61.8%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.15,
+        "tokens": 1492
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "RUS",
+        "expect_number": 61.8,
+        "question": "Russell vs teammate: what's the head-to-head win rate?",
+        "reply": "Russell\u2019s head\u2011to\u2011head win rate against his current teammate is **61.8\u202f%** (based on 166 races up to the 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Russell",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "RUS \u2014 Teammate H2H win % (to date): 61.8%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 5.65,
+        "tokens": 1519
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "RUS",
+        "expect_number": 61.8,
+        "question": "Give me Russell's head-to-head record against teammates as a percentage.",
+        "reply": "Russell\u2019s head\u2011to\u2011head win percentage against his teammates is **61.8\u202f%** (based on 166 races up to the 2026 R14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Russell",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "RUS \u2014 Teammate H2H win % (to date): 61.8%\n(Based on 166 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 7.27,
+        "tokens": 1522
+      }
+    ],
+    [
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "COL",
+        "expect_number": 40.0,
+        "question": "What is Franco Colapinto's teammate head-to-head win percentage?",
+        "reply": "Franco\u202fColapinto\u2019s teammate head\u2011to\u2011head win percentage is **40.0\u202f%** (based on 41 races up to 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Franco Colapinto",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "COL \u2014 Teammate H2H win % (to date): 40.0%\n(Based on 41 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.05,
+        "tokens": 1530
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "COL",
+        "expect_number": 40.0,
+        "question": "How often does Franco Colapinto beat their teammate?",
+        "reply": "Franco\u202fColapinto has finished ahead of his teammate in about **40\u202f%** of the races he\u2019s entered (41 races to date, latest being 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Franco Colapinto",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "COL \u2014 Teammate H2H win % (to date): 40.0%\n(Based on 41 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 5.72,
+        "tokens": 1526
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "COL",
+        "expect_number": 40.0,
+        "question": "Franco Colapinto vs teammate: what's the head-to-head win rate?",
+        "reply": "Franco\u202fColapinto\u2019s teammate\u2011to\u2011teammate win\u2011rate is **40\u202f%** (based on 41 races up to 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Franco Colapinto",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "COL \u2014 Teammate H2H win % (to date): 40.0%\n(Based on 41 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 0.93,
+        "tokens": 1534
+      },
+      {
+        "kind": "stats",
+        "tool": "features_for_stats_tool",
+        "driver": "COL",
+        "expect_number": 40.0,
+        "question": "Give me Franco Colapinto's head-to-head record against teammates as a percentage.",
+        "reply": "Franco\u202fColapinto\u2019s head\u2011to\u2011head win percentage against his teammates is **40.0\u202f%** (based on 41 races up to the 2026\u202fR14).",
+        "tool_calls": [
+          {
+            "name": "features_for_stats_tool",
+            "args": {
+              "driver_id": "Franco Colapinto",
+              "metric": "teammate_win_pct"
+            }
+          }
+        ],
+        "tool_output": "COL \u2014 Teammate H2H win % (to date): 40.0%\n(Based on 41 races in dataset, latest: 2026 R14)",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 6.1,
+        "tokens": 1541
+      }
+    ],
+    [
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 3,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Who does the model predict to win round 3 of 2026?",
+        "reply": "The model predicts **Kimi\u202fAntonelli** to win Round\u202f3 of the 2026 season.\n\n**Why the model favours him**\n\n| Feature | Driver\u2019s value | SHAP contribution |\n|---------|----------------|-------------------|\n| Qualifying position | 1 | \u20130.840 |\n| Q3 gap to pole (s) | 0 | \u20130.380 |\n| Grid position | 1 | \u20130.303 |\n| Quali gap to pole (%) | 0.000\u202f% | \u20130.235 |\n| Driver points (last\u202f5 races) | 13.6 | \u20130.153 |\n\nAll of these factors pull the prediction toward a better finish (negative SHAP values). Antonelli\u2019s pole\u2011position start, zero gap to pole in Q3, and recent points tally give the model the strongest case for a race win.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 3,
+              "season": 2026
+            }
+          },
+          {
+            "name": "explain_prediction_tool",
+            "args": {
+              "driver_id": "KIM",
+              "round_num": 3,
+              "season": 2026
+            }
+          },
+          {
+            "name": "explain_prediction_tool",
+            "args": {
+              "driver_id": "Kimi Antonelli",
+              "round_num": 3,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 3:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Oscar Piastri (McLaren) [grid: P3]\nP5: Lewis Hamilton (Ferrari) [grid: P6]\nP6: Lando Norris (McLaren) [grid: P5]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Max Verstappen (Red Bull Racing) [grid: P11]\nP9: Pierre Gasly (Alpine) [grid: P7]\nP10: Gabriel Bortoleto (Audi) [grid: P9]\nNo driver called 'KIM' in the dataset (2018 onwards).\nSHAP explanation for Kimi Antonelli (predicted P1):\n\nKey factors driving this prediction:\n  - Qualifying position: value 1; SHAP contribution -0.840 (favours better finish)\n  - Q3 gap to pole (s): value 0; SHAP contribution -0.380 (favours better finish)\n  - Grid position: value 1; SHAP contribution -0.303 (favours better finish)\n  - Quali gap to pole (%): value 0.000%; SHAP contribution -0.235 (favours better finish)\n  - Driver points (last 5 races): value 13.6; SHAP contribution -0.153 (favours better finish)\n\nGrid position: P1\nPredicted finish: P1\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 9.62,
+        "tokens": 3763
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 3,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Predicted winner for 2026 round 3?",
+        "reply": "**Predicted winner for the 2026 Round\u202f3 (Monaco):**  \n**Kimi\u202fAntonelli** (Mercedes) \u2013 starting from pole (P1).",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 3,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 3:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Oscar Piastri (McLaren) [grid: P3]\nP5: Lewis Hamilton (Ferrari) [grid: P6]\nP6: Lando Norris (McLaren) [grid: P5]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Max Verstappen (Red Bull Racing) [grid: P11]\nP9: Pierre Gasly (Alpine) [grid: P7]\nP10: Gabriel Bortoleto (Audi) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 12.07,
+        "tokens": 1654
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 3,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "According to PitWall, which driver is favourite in race 3 of the 2026 season?",
+        "reply": "The favourite for Race\u202f3 of the 2026 season is **Kimi\u202fAntonelli** (Mercedes).",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 3,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 3:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Oscar Piastri (McLaren) [grid: P3]\nP5: Lewis Hamilton (Ferrari) [grid: P6]\nP6: Lando Norris (McLaren) [grid: P5]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Max Verstappen (Red Bull Racing) [grid: P11]\nP9: Pierre Gasly (Alpine) [grid: P7]\nP10: Gabriel Bortoleto (Audi) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 1.38,
+        "tokens": 1690
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 3,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Who's on top of the predicted order for 2026 R3?",
+        "reply": "The predicted winner for the 2026\u202fRound\u202f3 race is **Kimi\u202fAntonelli** (Mercedes).",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 3,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 3:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Oscar Piastri (McLaren) [grid: P3]\nP5: Lewis Hamilton (Ferrari) [grid: P6]\nP6: Lando Norris (McLaren) [grid: P5]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Max Verstappen (Red Bull Racing) [grid: P11]\nP9: Pierre Gasly (Alpine) [grid: P7]\nP10: Gabriel Bortoleto (Audi) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.86,
+        "tokens": 1638
+      }
+    ],
+    [
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 13,
+        "expect_text": [
+          "Russell"
+        ],
+        "question": "Who does the model predict to win round 13 of 2026?",
+        "reply": "George\u202fRussell is predicted to win round\u202f13 of the 2026 season.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 13:\nP1: George Russell (Mercedes) [grid: P2]\nP2: Max Verstappen (Red Bull Racing) [grid: P5]\nP3: Pierre Gasly (Alpine) [grid: P1]\nP4: Oscar Piastri (McLaren) [grid: P6]\nP5: Kimi Antonelli (Mercedes) [grid: P19]\nP6: Charles Leclerc (Ferrari) [grid: P3]\nP7: Lando Norris (McLaren) [grid: P8]\nP8: Lewis Hamilton (Ferrari) [grid: P4]\nP9: Franco Colapinto (Alpine) [grid: P7]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 6.4,
+        "tokens": 1628
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 13,
+        "expect_text": [
+          "Russell"
+        ],
+        "question": "Predicted winner for 2026 round 13?",
+        "reply": "**Predicted winner for the 2026 Round\u202f13 (Monaco):**  \n**George\u202fRussell** (Mercedes) \u2013 starting from P2.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 13:\nP1: George Russell (Mercedes) [grid: P2]\nP2: Max Verstappen (Red Bull Racing) [grid: P5]\nP3: Pierre Gasly (Alpine) [grid: P1]\nP4: Oscar Piastri (McLaren) [grid: P6]\nP5: Kimi Antonelli (Mercedes) [grid: P19]\nP6: Charles Leclerc (Ferrari) [grid: P3]\nP7: Lando Norris (McLaren) [grid: P8]\nP8: Lewis Hamilton (Ferrari) [grid: P4]\nP9: Franco Colapinto (Alpine) [grid: P7]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 3.88,
+        "tokens": 1649
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 13,
+        "expect_text": [
+          "Russell"
+        ],
+        "question": "According to PitWall, which driver is favourite in race 13 of the 2026 season?",
+        "reply": "The favourite for race\u202f13 of the 2026 season is **George\u202fRussell** (Mercedes). He is predicted to finish P1.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 13:\nP1: George Russell (Mercedes) [grid: P2]\nP2: Max Verstappen (Red Bull Racing) [grid: P5]\nP3: Pierre Gasly (Alpine) [grid: P1]\nP4: Oscar Piastri (McLaren) [grid: P6]\nP5: Kimi Antonelli (Mercedes) [grid: P19]\nP6: Charles Leclerc (Ferrari) [grid: P3]\nP7: Lando Norris (McLaren) [grid: P8]\nP8: Lewis Hamilton (Ferrari) [grid: P4]\nP9: Franco Colapinto (Alpine) [grid: P7]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 4.21,
+        "tokens": 1713
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 13,
+        "expect_text": [
+          "Russell"
+        ],
+        "question": "Who's on top of the predicted order for 2026 R13?",
+        "reply": "George\u202fRussell is predicted to finish first in the 2026\u202fR13.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 13,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 13:\nP1: George Russell (Mercedes) [grid: P2]\nP2: Max Verstappen (Red Bull Racing) [grid: P5]\nP3: Pierre Gasly (Alpine) [grid: P1]\nP4: Oscar Piastri (McLaren) [grid: P6]\nP5: Kimi Antonelli (Mercedes) [grid: P19]\nP6: Charles Leclerc (Ferrari) [grid: P3]\nP7: Lando Norris (McLaren) [grid: P8]\nP8: Lewis Hamilton (Ferrari) [grid: P4]\nP9: Franco Colapinto (Alpine) [grid: P7]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 9.74,
+        "tokens": 1626
+      }
+    ],
+    [
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 9,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Who does the model predict to win round 9 of 2026?",
+        "reply": "The model predicts **Kimi\u202fAntonelli** to win Round\u202f9 of the 2026 season.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 9,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 9:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Charles Leclerc (Ferrari) [grid: P2]\nP3: George Russell (Mercedes) [grid: P4]\nP4: Lewis Hamilton (Ferrari) [grid: P3]\nP5: Isack Hadjar (Red Bull Racing) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P7]\nP8: Oscar Piastri (McLaren) [grid: P8]\nP9: Liam Lawson (Racing Bulls) [grid: P10]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 8.03,
+        "tokens": 1635
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 9,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Predicted winner for 2026 round 9?",
+        "reply": "**Predicted winner for the 2026 Round\u202f9 (Monaco Grand Prix):**  \n**Kimi Antonelli** (Mercedes) \u2013 starting from pole (P1).",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 9,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 9:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Charles Leclerc (Ferrari) [grid: P2]\nP3: George Russell (Mercedes) [grid: P4]\nP4: Lewis Hamilton (Ferrari) [grid: P3]\nP5: Isack Hadjar (Red Bull Racing) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P7]\nP8: Oscar Piastri (McLaren) [grid: P8]\nP9: Liam Lawson (Racing Bulls) [grid: P10]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 6.88,
+        "tokens": 1657
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 9,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "According to PitWall, which driver is favourite in race 9 of the 2026 season?",
+        "reply": "The favourite for race\u202f9 of the 2026 season is **Kimi\u202fAntonelli** (Mercedes), predicted to finish P1.",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 9,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 9:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Charles Leclerc (Ferrari) [grid: P2]\nP3: George Russell (Mercedes) [grid: P4]\nP4: Lewis Hamilton (Ferrari) [grid: P3]\nP5: Isack Hadjar (Red Bull Racing) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P7]\nP8: Oscar Piastri (McLaren) [grid: P8]\nP9: Liam Lawson (Racing Bulls) [grid: P10]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 0.75,
+        "tokens": 1666
+      },
+      {
+        "kind": "predict",
+        "tool": "race_predictor_tool",
+        "season": 2026,
+        "round": 9,
+        "expect_text": [
+          "Antonelli"
+        ],
+        "question": "Who's on top of the predicted order for 2026 R9?",
+        "reply": "The predicted winner for 2026 Round\u202f9 is **Kimi\u202fAntonelli** (Mercedes).",
+        "tool_calls": [
+          {
+            "name": "race_predictor_tool",
+            "args": {
+              "round_num": 9,
+              "season": 2026
+            }
+          }
+        ],
+        "tool_output": "Predicted top 10 for 2026 Round 9:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Charles Leclerc (Ferrari) [grid: P2]\nP3: George Russell (Mercedes) [grid: P4]\nP4: Lewis Hamilton (Ferrari) [grid: P3]\nP5: Isack Hadjar (Red Bull Racing) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P7]\nP8: Oscar Piastri (McLaren) [grid: P8]\nP9: Liam Lawson (Racing Bulls) [grid: P10]\nP10: Arvid Lindblad (Racing Bulls) [grid: P9]",
+        "tool_ok": true,
+        "args_ok": true,
+        "correct": true,
+        "grounded": true,
+        "ungrounded_numbers": [],
+        "guard_flagged": false,
+        "shown_unflagged": true,
+        "latency_s": 3.84,
+        "tokens": 1637
+      }
+    ]
+  ]
+}
