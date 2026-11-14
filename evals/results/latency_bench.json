@@ -1,0 +1,370 @@
+{
+  "meta": {
+    "date": "2026-11-14T09:35:52+00:00",
+    "git_commit": "069966e67d590abeea96476d90e263f37dd44750",
+    "command": "python evals/latency_bench.py",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "agent_model": "openai/gpt-oss-20b",
+    "runs": 3,
+    "questions": 6
+  },
+  "summary": {
+    "default reasoning": {
+      "n": 18,
+      "p50_s": 6.87,
+      "p90_s": 13.7,
+      "llm_calls_mean": 2.33,
+      "input_tokens_mean": 1900,
+      "output_tokens_mean": 287,
+      "answered": 18
+    },
+    "reasoning_effort=low": {
+      "n": 18,
+      "p50_s": 3.08,
+      "p90_s": 10.7,
+      "llm_calls_mean": 2,
+      "input_tokens_mean": 1533,
+      "output_tokens_mean": 171,
+      "answered": 18
+    }
+  },
+  "runs": {
+    "default reasoning": [
+      {
+        "run": 0,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 1.97,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 137,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 1.07,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 118,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 10.83,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 129,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 1.61,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 123,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 9.98,
+        "llm_calls": 3,
+        "input_tokens": 2736,
+        "output_tokens": 674,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 13.7,
+        "llm_calls": 3,
+        "input_tokens": 2722,
+        "output_tokens": 558,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 7.03,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 137,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 6.87,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 118,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 3.07,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 129,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 3.02,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 123,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 13.98,
+        "llm_calls": 3,
+        "input_tokens": 2736,
+        "output_tokens": 665,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 14.23,
+        "llm_calls": 3,
+        "input_tokens": 2722,
+        "output_tokens": 586,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 9.34,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 137,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 4.91,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 118,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 1.23,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 129,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 2.18,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 123,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 11.18,
+        "llm_calls": 3,
+        "input_tokens": 2736,
+        "output_tokens": 623,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 10.17,
+        "llm_calls": 3,
+        "input_tokens": 2722,
+        "output_tokens": 549,
+        "answered": true
+      }
+    ],
+    "reasoning_effort=low": [
+      {
+        "run": 0,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 1.2,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 95,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 0.98,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 103,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 5.35,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 80,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 5.33,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 74,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 10.7,
+        "llm_calls": 2,
+        "input_tokens": 1630,
+        "output_tokens": 321,
+        "answered": true
+      },
+      {
+        "run": 0,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 3.32,
+        "llm_calls": 2,
+        "input_tokens": 1624,
+        "output_tokens": 311,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 1.31,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 108,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 3.65,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 104,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 0.98,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 80,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 12.05,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 74,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 1.32,
+        "llm_calls": 2,
+        "input_tokens": 1630,
+        "output_tokens": 321,
+        "answered": true
+      },
+      {
+        "run": 1,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 4.67,
+        "llm_calls": 2,
+        "input_tokens": 1624,
+        "output_tokens": 369,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "What is Lando Norris's teammate head-to-head win percentage?",
+        "seconds": 1.75,
+        "llm_calls": 2,
+        "input_tokens": 1415,
+        "output_tokens": 109,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "What is Verstappen's average finish at the circuit of his latest race?",
+        "seconds": 2.74,
+        "llm_calls": 2,
+        "input_tokens": 1412,
+        "output_tokens": 104,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Who does the model predict to win round 9 of the 2026 season?",
+        "seconds": 8.28,
+        "llm_calls": 2,
+        "input_tokens": 1559,
+        "output_tokens": 80,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Who does the model predict to win round 13 of the 2026 season?",
+        "seconds": 3.08,
+        "llm_calls": 2,
+        "input_tokens": 1558,
+        "output_tokens": 74,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Why is Oscar Piastri predicted to finish P8 in round 9 of 2026?",
+        "seconds": 16.47,
+        "llm_calls": 2,
+        "input_tokens": 1630,
+        "output_tokens": 308,
+        "answered": true
+      },
+      {
+        "run": 2,
+        "question": "Why is Charles Leclerc predicted where he is in round 12 of 2026?",
+        "seconds": 1.69,
+        "llm_calls": 2,
+        "input_tokens": 1624,
+        "output_tokens": 369,
+        "answered": true
+      }
+    ]
+  }
+}

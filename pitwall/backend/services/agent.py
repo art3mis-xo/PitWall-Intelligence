@@ -23,6 +23,9 @@ llm = ChatGroq(
     temperature=0,
     max_tokens=None,
     api_key=api_key,
+    # gpt-oss is a reasoning model; "low" halved median latency (6.9 s -> 3.1 s,
+    # evals/results/latency_bench.md). Answer quality at "low": verify with evals/agent_eval.py.
+    reasoning_effort=os.getenv("GROQ_REASONING_EFFORT", "low"),
 )
 
 def _fold(text: str) -> str:
