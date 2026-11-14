@@ -24,7 +24,7 @@ llm = ChatGroq(
     max_tokens=None,
     api_key=api_key,
     # gpt-oss is a reasoning model; "low" halved median latency (6.9 s -> 3.1 s,
-    # evals/results/latency_bench.md). Answer quality at "low": verify with evals/agent_eval.py.
+    # evals/results/latency_bench.md) with answer quality unchanged (agent_eval_history.md, v5).
     reasoning_effort=os.getenv("GROQ_REASONING_EFFORT", "low"),
     # Without a timeout a dropped connection hangs the request forever (seen: an eval run stuck
     # for 30+ minutes on one call); fail fast and let the retry or the error message handle it.

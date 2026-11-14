@@ -22,7 +22,13 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 
 **Leak-free result.** The leak-free model matches a strong grid-position baseline (Spearman 0.667 vs 0.650 on 14 held-out 2026 races, 95% CI for the difference −0.018 to +0.055).
 
-**Agent evaluation.** On 24 generated questions it had not been tuned on, the chat agent chose the right tool for 100%, answered 92% correctly, and every number it stated was found in tool output in 96% of replies; before fixes from the first run, tool choice was 75% ([agent_eval_seed1.md](evals/results/agent_eval_seed1.md), [baseline](evals/results/agent_eval_baseline.md)).
+**Agent evaluation.** On 24 generated questions it had not been tuned on, the chat agent chose the right tool for 100%, answered 92% correctly, and every number it stated was found in tool output (100%); before fixes from the first run, tool choice was 75% ([agent_eval_seed1.md](evals/results/agent_eval_seed1.md), [baseline](evals/results/agent_eval_baseline.md)).
+
+**Agent engineering, each measured before and after** ([version history](evals/results/agent_eval_history.md)):
+- Latency: `reasoning_effort=low` cut median response time from 6.87 s to 3.08 s (p90 13.7 s to 10.7 s) with answer quality unchanged ([latency_bench.md](evals/results/latency_bench.md)).
+- Guardrails: successful prompt-injection attacks went from 3/24 to 0/24, with 0/54 legitimate questions blocked ([guardrail_eval.md](evals/results/guardrail_eval.md)).
+- Robustness: the same 8 questions in 4 wordings each were answered correctly 32/32 times ([robustness_eval.md](evals/results/robustness_eval.md)).
+- Loop safety: a 3-round tool budget turns a runaway tool loop into an answer instead of an error (`tests/test_agent_loop.py`).
 
 Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 58. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
 
