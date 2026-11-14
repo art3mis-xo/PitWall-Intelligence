@@ -1,7 +1,7 @@
 {
   "meta": {
-    "date": "2026-11-14T09:02:58+00:00",
-    "git_commit": "74d06c10222e289dec8d26ab24e6df6969b6922a",
+    "date": "2026-11-14T09:23:42+00:00",
+    "git_commit": "3cd9fc120ae0300acbd32de144bc9659e3921bc6",
     "command": "python evals/agent_eval.py --seed 1",
     "libraries": {
       "xgboost": "3.3.0",
@@ -24,9 +24,11 @@
     "arguments": "22/22 (100%)",
     "correct": "22/24 (92%)",
     "grounded": "23/24 (96%)",
-    "latency_median_s": 4.61,
-    "latency_p90_s": 11.18,
-    "tokens_median": 1637
+    "latency_median_s": 3.19,
+    "latency_p90_s": 10.47,
+    "tokens_median": 1648,
+    "tool_calls_mean": 1.17,
+    "tool_calls_max": 2
   },
   "cases": [
     {
@@ -51,8 +53,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.36,
-      "tokens": 1576
+      "latency_s": 1.28,
+      "tokens": 1611
     },
     {
       "kind": "stats",
@@ -76,7 +78,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.55,
+      "latency_s": 1.21,
       "tokens": 1550
     },
     {
@@ -101,8 +103,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 2.51,
-      "tokens": 1585
+      "latency_s": 1.06,
+      "tokens": 1569
     },
     {
       "kind": "stats",
@@ -126,7 +128,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 2.13,
+      "latency_s": 1.05,
       "tokens": 1531
     },
     {
@@ -151,7 +153,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.46,
+      "latency_s": 2.96,
       "tokens": 1552
     },
     {
@@ -176,7 +178,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.17,
+      "latency_s": 5.78,
       "tokens": 1560
     },
     {
@@ -201,8 +203,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 10.55,
-      "tokens": 1579
+      "latency_s": 2.26,
+      "tokens": 1580
     },
     {
       "kind": "stats",
@@ -226,7 +228,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 4.79,
+      "latency_s": 9.18,
       "tokens": 1526
     },
     {
@@ -254,7 +256,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 5.06,
+      "latency_s": 2.95,
       "tokens": 1688
     },
     {
@@ -266,7 +268,7 @@
       "expect_text": [
         "Antonelli"
       ],
-      "reply": "The model predicts **Kimi\u202fAntonelli** (Mercedes) to win Round\u202f2 of the 2026 season.",
+      "reply": "The model predicts **Kimi\u202fAntonelli** to win Round\u202f2 of the 2026 season.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -282,8 +284,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 5.33,
-      "tokens": 1693
+      "latency_s": 2.93,
+      "tokens": 1699
     },
     {
       "kind": "predict",
@@ -310,7 +312,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.28,
+      "latency_s": 6.38,
       "tokens": 1689
     },
     {
@@ -338,7 +340,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 6.42,
+      "latency_s": 3.08,
       "tokens": 1685
     },
     {
@@ -366,7 +368,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.48,
+      "latency_s": 2.84,
       "tokens": 1685
     },
     {
@@ -394,7 +396,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 2.96,
+      "latency_s": 3.87,
       "tokens": 1689
     },
     {
@@ -407,7 +409,7 @@
       "expect_text": [
         "Qualifying position"
       ],
-      "reply": "Oliver Bearman is projected to finish **P10** in the 2026 Bahrain Grand Prix because the model weighs several quantitative factors that, together, offset his starting position.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| **Grid position** | P12 | +0.075 (hurts finish) |\n| **Qualifying position** | 12 | +0.156 (hurts finish) |\n| **Q3 gap to pole (seconds)** | unknown | +0.142 (hurts finish) |\n| **Qualifying gap to pole (% of lap time)** | 2.284\u202f% | +0.063 (hurts finish) |\n| **Driver points in last 5 races** | 4.2 | \u20130.141 (helps finish) |\n\nThe positive SHAP values for grid and qualifying position, as well as the gaps to pole, indicate that starting from P12 and qualifying 12th with a noticeable time deficit to the pole sitter will likely keep Bearman from a front\u2011row finish. The negative SHAP value for recent points suggests he has shown some improvement, which nudges the prediction up by a couple of places.  \n\nCombining these effects, the model estimates that Bearman will climb from P12 to **P10** in the race.",
+      "reply": "Oliver Bearman is projected to finish **P10** in the 2026 Australian Grand Prix because the model\u2019s key drivers are his starting position and qualifying performance, offset slightly by his recent points haul.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | P12 | +0.075 (hurts finish) |\n| Qualifying position | 12 | +0.156 (hurts finish) |\n| Q3 gap to pole (s) | unknown | +0.142 (hurts finish) |\n| Qualifying gap to pole (%) | 2.284\u202f% | +0.063 (hurts finish) |\n| Driver points (last\u202f5 races) | 4.2 | \u20130.141 (helps finish) |\n\nThe positive SHAP values for grid and qualifying position, as well as the gaps to pole, pull the predicted finish down from the starting grid. The negative SHAP value from his recent points slightly mitigates this, nudging him up to P10 rather than P12. Thus, Bearman\u2019s P12 start and modest qualifying gaps are the main reasons for the P10 prediction.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -431,8 +433,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 8.69,
-      "tokens": 3273
+      "latency_s": 8.68,
+      "tokens": 3200
     },
     {
       "kind": "explain",
@@ -444,7 +446,7 @@
       "expect_text": [
         "Team avg finish"
       ],
-      "reply": "Pierre Gasly is projected to finish 10th in the 2026 Round\u202f2 because the model weighs several recent performance indicators that collectively push his expected result down.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Team average finish (last\u202f5 races) | 14.6 | +0.164 (hurts finish) |\n| Q3 gap to pole (s) | 0.809 | \u20130.163 (helps finish) |\n| Grid position | 7 | \u20130.144 (helps finish) |\n| Driver points (last\u202f5 races) | 0.4 | +0.114 (hurts finish) |\n| Team qualifying pace delta | 0.809 | \u20130.047 (helps finish) |\n\nThe strongest negative influence comes from the Alpine team\u2019s recent average finish, which is well above the field and pulls Gasly\u2019s predicted position down. His grid spot (P7) and decent Q3 gap to pole help, but the high team\u2011average finish and his own low points tally in the last five races outweigh those positives, resulting in a predicted finish of 10th.",
+      "reply": "Pierre Gasly is projected to finish 10th in the 2026 Round\u202f2 mainly because the model weighs his recent performance and team context more heavily than his starting position.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | 7 | \u20130.144 (helps) |\n| Q3 gap to pole | 0.809\u202fs | \u20130.163 (helps) |\n| Team average finish (last\u202f5 races) | 14.6 | +0.164 (hurts) |\n| Driver points (last\u202f5 races) | 0.4 | +0.114 (hurts) |\n| Team qualifying pace delta | 0.809 | \u20130.047 (helps) |\n\nThe strongest negative (helpful) contributions come from his grid spot and qualifying gap, but the positive contributions from the Alpine team\u2019s poor recent results and his own low points tally outweigh them. Consequently, the model predicts a drop from P7 on the grid to P10 on the track.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -468,8 +470,8 @@
       "correct": false,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 11.18,
-      "tokens": 3214
+      "latency_s": 10.47,
+      "tokens": 3148
     },
     {
       "kind": "explain",
@@ -481,7 +483,7 @@
       "expect_text": [
         "Team avg finish"
       ],
-      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 13th in the 2026\u202fRound\u202f4 because several key factors pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | P10 | +0.153 |\n| Team average finish (last\u202f5 races) | 14.5 | +0.169 |\n| Q3 gap to pole (s) | unknown | +0.167 |\n| Driver points (last\u202f5 races) | 0.4 | +0.109 |\n| Team qualifying\u2011pace delta | unknown | +0.068 |\n\nAll of these contributions are positive, meaning they worsen the predicted finish. Starting from P10, a relatively low\u2011performing team (average finish 14.5) and a large Q3 gap to pole suggest limited pace. H\u00fclkenberg\u2019s own points tally over the last five races is very low (0.4), indicating recent struggles. Together, these factors push the model\u2019s estimate from the grid position to a predicted 13th place.",
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 13th in the 2026\u202fRound\u202f4 because several key factors pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | P10 | +0.153 |\n| Team average finish (last\u202f5 races) | 14.5 | +0.169 |\n| Driver points (last\u202f5 races) | 0.4 | +0.109 |\n| Q3 gap to pole | unknown | +0.167 |\n| Team qualifying\u2011pace delta | unknown | +0.068 |\n\nThe positive SHAP values indicate a detrimental effect on the predicted finish. Starting from P10, H\u00fclkenberg\u2019s team has been finishing around 14th on average, and his own recent points tally is low. The model also penalises him for the (unknown) time gap he would have in Q3 and for the team\u2019s overall qualifying pace. Together, these factors push the prediction from the grid position of 10th down to a 13th\u2011place finish.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -503,10 +505,12 @@
       "tool_ok": true,
       "args_ok": true,
       "correct": false,
-      "grounded": true,
-      "ungrounded_numbers": [],
-      "latency_s": 11.85,
-      "tokens": 3243
+      "grounded": false,
+      "ungrounded_numbers": [
+        14.0
+      ],
+      "latency_s": 11.25,
+      "tokens": 3249
     },
     {
       "kind": "explain",
@@ -518,7 +522,7 @@
       "expect_text": [
         "Qualifying position"
       ],
-      "reply": "Lando Norris is projected to finish **P4** in round\u202f7 of 2026 because the model\u2019s key drivers all point to a strong, but not dominant, race performance:\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| **Grid position** | P4 | \u20130.145 | Slightly favours a P4 finish |\n| **Qualifying position** | 4 | \u20130.738 | Strongly favours a P4 finish |\n| **Q3 gap to pole (s)** | 0.322 | \u20130.253 | Small gap keeps him near the front |\n| **Team quali pace delta** | 0.366 | \u20130.074 | McLaren\u2019s pace is close to the front\u2011row pace |\n| **Avg finish at circuit** | unknown | +0.027 | A small negative pull, but minimal |\n\nThe negative SHAP values (lower is better) for grid, qualifying, and Q3 gap dominate, pushing the predicted finish to match the starting grid of P4. The only slight drag comes from the average finish at the circuit, which is a very small positive contribution (+0.027), indicating a marginally worse historical performance there. Overall, the combination of a solid qualifying, a small gap to pole, and competitive team pace keeps Norris on the front row, resulting in a predicted P4 finish.",
+      "reply": "Lando Norris is projected to finish **P4** in round\u202f7 of 2026 because the model\u2019s key drivers all point to a strong, but not dominant, race performance.\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| **Grid position** | P4 | \u20130.145 | Starting from the front gives a clear advantage. |\n| **Qualifying position** | 4 | \u20130.738 | A top\u2011four grid spot is the strongest predictor of a top\u2011four finish. |\n| **Q3 gap to pole (s)** | 0.322 | \u20130.253 | A small time gap to pole indicates competitive pace. |\n| **Team quali pace delta** | 0.366 | \u20130.074 | McLaren\u2019s qualifying pace is slightly better than the field, helping the finish. |\n| **Avg finish at circuit** | unknown | +0.027 | A marginal negative influence, but small enough to be outweighed by the other factors. |\n\nThe negative SHAP values (except the tiny positive from the circuit average) all pull the predicted position toward the front. With a P4 grid start and a solid qualifying performance, the model expects Norris to maintain that position, resulting in a predicted finish of **P4**.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -542,8 +546,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 19.97,
-      "tokens": 3288
+      "latency_s": 12.82,
+      "tokens": 3248
     },
     {
       "kind": "explain",
@@ -555,7 +559,7 @@
       "expect_text": [
         "Qualifying position"
       ],
-      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 15th in the 2026\u202fRound\u202f8 because several key features pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | **P14** | +0.116 (hurts finish) |\n| Qualifying position | **P14** | +0.319 (hurts finish) |\n| Q3 gap to pole | *unknown* | +0.181 (hurts finish) |\n| Team average finish (last\u202f5 races) | **13.5** | +0.139 (hurts finish) |\n| Driver points (last\u202f5 races) | **0** | +0.110 (hurts finish) |\n\nThe combination of starting from 14th, a poor qualifying result, a relatively slow team, and no recent points all add positive SHAP values that push the model\u2019s predicted finish toward the back of the field, landing him at 15th.",
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 15th in the 2026\u202fRound\u202f8 because several key features pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | **P14** | +0.116 |\n| Qualifying position | **P14** | +0.319 |\n| Q3 gap to pole | *unknown* | +0.181 |\n| Team average finish (last\u202f5 races) | **13.5** | +0.139 |\n| Driver points (last\u202f5 races) | **0** | +0.110 |\n\nAll of these factors add positive SHAP values, meaning they worsen the predicted finish. Starting from P14, a poor qualifying result and a large gap to pole reduce his chances of climbing the field. The Red Bull Racing team\u2019s recent average finish of 13.5 and H\u00fclkenberg\u2019s lack of points in the last five races further lower his expected performance, culminating in a P15 prediction.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -579,8 +583,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 12.04,
-      "tokens": 3226
+      "latency_s": 8.13,
+      "tokens": 3232
     },
     {
       "kind": "explain",
@@ -592,7 +596,7 @@
       "expect_text": [
         "Q3 gap to pole"
       ],
-      "reply": "Nico\u202fH\u00fclkenberg is projected to finish **P11** in round\u202f11 of 2026 mainly because his starting position and recent performance metrics are not favourable for a top\u201110 result.\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| Grid position | **P10** | **+0.142** | Starting from 10th already limits upside |\n| Q3 gap to pole (s) | 1.479\u202fs | **\u20130.185** | A relatively small gap helps, but not enough to offset other factors |\n| Driver points (last\u202f5 races) | 0 | **+0.092** | No recent points signal a dip in form |\n| Team average finish (last\u202f5 races) | 12.9 | **+0.078** | The team\u2019s recent results are below midfield |\n| Qualifying gap to pole (%) | 1.855\u202f% | **+0.064** | A modest gap still hurts the predicted outcome |\n\nThe positive SHAP values (except the small negative from the Q3 gap) all push the predicted finish downwards. Starting from P10, combined with a lack of recent points and a team that has been finishing around 13th on average, the model expects H\u00fclkenberg to finish one place lower than his grid spot, i.e., **P11**.",
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish **P11** in round\u202f11 of 2026 mainly because his starting position and recent performance metrics are not favourable for a top\u201110 result.\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| Grid position | **P10** | +0.142 | Slightly worsens the predicted finish |\n| Q3 gap to pole (s) | 1.479\u202fs | \u20130.185 | A small advantage, but not enough to offset other factors |\n| Driver points (last\u202f5 races) | 0 | +0.092 | Indicates a lack of recent points, hurting the prediction |\n| Team average finish (last\u202f5 races) | 12.9 | +0.078 | Shows the team is generally finishing lower, pulling H\u00fclkenberg down |\n| Qualifying gap to pole (%) | 1.855\u202f% | +0.064 | A modest gap that still penalises the finish |\n\nThe net effect of these contributions is a predicted finish one place behind the grid spot, i.e., **P11**. The model interprets H\u00fclkenberg\u2019s modest Q3 advantage as insufficient to overcome the combined impact of a lower\u2011tier team performance and a lack of recent points.",
       "tool_calls": [
         {
           "name": "race_predictor_tool",
@@ -614,12 +618,10 @@
       "tool_ok": true,
       "args_ok": true,
       "correct": true,
-      "grounded": false,
-      "ungrounded_numbers": [
-        13.0
-      ],
-      "latency_s": 10.33,
-      "tokens": 3327
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 15.47,
+      "tokens": 3318
     },
     {
       "kind": "stats",
@@ -643,8 +645,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 7.98,
-      "tokens": 1590
+      "latency_s": 3.29,
+      "tokens": 1574
     },
     {
       "kind": "ambiguous",
@@ -671,14 +673,14 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 1.06,
+      "latency_s": 6.54,
       "tokens": 1560
     },
     {
       "kind": "out_of_scope",
       "question": "What was the fastest lap at the 1995 Monaco Grand Prix?",
       "tool": null,
-      "reply": "I\u2019m sorry, but I don\u2019t have that information.",
+      "reply": "I\u2019m sorry, but I don\u2019t have data on the 1995 Monaco Grand Prix.",
       "tool_calls": [],
       "tool_output": "",
       "tool_ok": true,
@@ -686,8 +688,8 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 4.42,
-      "tokens": 806
+      "latency_s": 0.32,
+      "tokens": 834
     },
     {
       "kind": "out_of_scope",
@@ -701,7 +703,7 @@
       "correct": true,
       "grounded": true,
       "ungrounded_numbers": [],
-      "latency_s": 0.38,
+      "latency_s": 0.5,
       "tokens": 800
     }
   ]

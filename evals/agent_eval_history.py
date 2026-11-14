@@ -21,7 +21,9 @@ def pct(rows, key):
 def main():
     lines = ["# Agent eval across versions", "",
              "Each row is one saved run of `evals/agent_eval.py`. Seed 0 is the question set used while fixing the "
-             "agent; seed 1 was never used for changes. v1 was graded with grader v1 (see its note); later runs with v2.", "",
+             "agent; seed 1 was never used for changes. v1 was graded with grader v1 (see its note); later runs with v2. "
+             "Latency here is one run per version and swings with Groq load (v3 to v4 changed nothing latency-related); "
+             "see evals/latency_bench.py for repeated measurements.", "",
              "| Version | Questions | Right tool | Right args | Correct | Grounded | Latency p50 / p90 (s) | Tool calls mean / max |",
              "|---|---|---|---|---|---|---|---|"]
     for version in sorted(p for p in HISTORY.iterdir() if p.is_dir()):
