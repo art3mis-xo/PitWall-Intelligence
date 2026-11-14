@@ -270,18 +270,24 @@ graph.add_edge("guard", END)
 graph.add_edge("tools","agent")
 app = graph.compile()
 
+def build_messages(message: str, history: list[dict] | None = None) -> list:
+    """The conversation as the model sees it: earlier turns (text only, as sent by the browser)
+    followed by the new question."""
+    messages = []
+    for h in history or []:
+        if h["role"] == "user":
+            messages.append(HumanMessage(content=h["content"]))
+        elif h["role"] == "assistant":
+            messages.append(AIMessage(content=h["content"]))
+    messages.append(HumanMessage(content=message))
+    return messages
+
+
 async def chat(message: str, history: list[dict] | None = None) -> str:
     refusal = screen_input(message)   # input guardrail: no LLM call for injection attempts
     if refusal:
         return refusal
-    messages = []
-    if history:
-        for h in history:
-            if h["role"] == "user":
-                messages.append(HumanMessage(content=h["content"]))
-            elif h["role"] == "assistant":
-                messages.append(AIMessage(content=h["content"]))
-    messages.append(HumanMessage(content=message))
+    messages = build_messages(message, history)
     result = app.invoke({"messages": messages})
     last   = result["messages"][-1]
     return last.content if hasattr(last, "content") else str(last)
@@ -292,16 +298,7 @@ async def chat_stream(message: str, history: list[dict] | None = None):
     if refusal:
         yield refusal
         return
-    messages = []
-
-    if history:
-        for h in history:
-            if h["role"] == "user":
-                messages.append(HumanMessage(content=h["content"]))
-            elif h["role"] == "assistant":
-                messages.append(AIMessage(content=h["content"]))
-
-    messages.append(HumanMessage(content=message))
+    messages = build_messages(message, history)
 
     async for event in app.astream_events({"messages": messages}, version="v1"):
         if event["event"] == "on_chat_model_stream":
