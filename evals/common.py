@@ -7,6 +7,7 @@ Every metric is computed per race, then averaged over races.
   ndcg10     NDCG@10 with relevance = 21 - finishing position (P1 = 20, P20 = 1)
 """
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -20,6 +21,14 @@ from sklearn.metrics import ndcg_score
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "evals" / "results"
 sys.path.insert(0, str(ROOT))
+
+# Evals use their own Groq key so they can't use up the live site's daily quota. Not under
+# pytest: tests use a placeholder key so an accidental LLM call fails instead of spending.
+if "pytest" not in sys.modules:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env")
+    if os.getenv("GROQ_EVAL_API_KEY"):
+        os.environ["GROQ_API_KEY"] = os.environ["GROQ_EVAL_API_KEY"]
 
 import train  # noqa: E402  (repo-root module)
 
