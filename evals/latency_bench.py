@@ -31,7 +31,7 @@ QUESTIONS = [
 
 
 def use(effort):
-    llm = ChatGroq(model=agent.llm.model_name, temperature=0, reasoning_effort=effort)
+    llm = ChatGroq(model=agent.llm.model_name, temperature=0, reasoning_effort=effort, timeout=30, max_retries=2)
     agent.llm, agent.llm_with_tools = llm, llm.bind_tools(agent.TOOLS)
 
 
