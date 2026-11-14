@@ -4,6 +4,8 @@ PitWall predicts the finishing order of a Formula 1 race from past results, qual
 
 Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 races.
 
+[![CI](https://github.com/art3mis-xo/PitWall-Intelligence/actions/workflows/ci.yml/badge.svg)](https://github.com/art3mis-xo/PitWall-Intelligence/actions/workflows/ci.yml)
+
 **Live demo:** [pit-wall-intelligence.vercel.app](https://pit-wall-intelligence.vercel.app) (API on Render; see [DEPLOY.md](DEPLOY.md)). Race telemetry charts need F1TV-authenticated data, so they run locally only. For a race that hasn't been qualified yet, the prediction uses each driver's average qualifying over their last 3 races, marked as estimated.
 
 ## What It Does
@@ -20,7 +22,7 @@ Feature data covers 2018 to 2026 Round 14: 3,766 driver-race rows across 187 rac
 
 **Leak-free result.** The leak-free model matches a strong grid-position baseline (Spearman 0.667 vs 0.650 on 14 held-out 2026 races, 95% CI for the difference −0.018 to +0.055).
 
-**Agent evaluation.** On 24 generated questions it had not been tuned on, the chat agent chose the right tool for 96%, answered 88% correctly and grounded every number it stated in tool output (100%); before fixes from the first run, tool choice was 75% ([agent_eval_seed1.md](evals/results/agent_eval_seed1.md), [baseline](evals/results/agent_eval_baseline.md)).
+**Agent evaluation.** On 24 generated questions it had not been tuned on, the chat agent chose the right tool for 100%, answered 92% correctly, and every number it stated was found in tool output in 96% of replies; before fixes from the first run, tool choice was 75% ([agent_eval_seed1.md](evals/results/agent_eval_seed1.md), [baseline](evals/results/agent_eval_baseline.md)).
 
 Data: 3,766 driver-race rows across 187 races (2018 to 2026 Round 14). Tests: 58. Full write-up, protocol and every table: [evals/results/LEAKAGE.md](evals/results/LEAKAGE.md).
 
