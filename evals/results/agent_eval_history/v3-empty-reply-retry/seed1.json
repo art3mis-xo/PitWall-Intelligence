@@ -1,0 +1,708 @@
+{
+  "meta": {
+    "date": "2026-11-14T09:02:58+00:00",
+    "git_commit": "74d06c10222e289dec8d26ab24e6df6969b6922a",
+    "command": "python evals/agent_eval.py --seed 1",
+    "libraries": {
+      "xgboost": "3.3.0",
+      "lightgbm": "4.6.0"
+    },
+    "dataset": {
+      "file": "data/features.csv",
+      "rows": 3766,
+      "races": 187,
+      "seasons": "2018-2026"
+    },
+    "agent_model": "openai/gpt-oss-20b",
+    "seed": 1,
+    "labels": "expected answers computed by code from data/features.csv and the predictor; no hand labels"
+  },
+  "summary": {
+    "cases": 24,
+    "errors": 0,
+    "tool_selection": "24/24 (100%)",
+    "arguments": "22/22 (100%)",
+    "correct": "22/24 (92%)",
+    "grounded": "23/24 (96%)",
+    "latency_median_s": 4.61,
+    "latency_p90_s": 11.18,
+    "tokens_median": 1637
+  },
+  "cases": [
+    {
+      "kind": "stats",
+      "question": "What is ANT's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "ANT",
+      "expect_number": 32.4,
+      "reply": "ANT\u2019s teammate head\u2011to\u2011head win percentage is **32.4\u202f%** (based on 38 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "ANT",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "ANT \u2014 Teammate H2H win % (to date): 32.4%\n(Based on 38 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.36,
+      "tokens": 1576
+    },
+    {
+      "kind": "stats",
+      "question": "What is Oliver Bearman's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "BEA",
+      "expect_number": 55.0,
+      "reply": "Oliver\u202fBearman\u2019s teammate head\u2011to\u2011head win percentage is **55.0\u202f%** (based on 41 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Oliver Bearman",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "BEA \u2014 Teammate H2H win % (to date): 55.0%\n(Based on 41 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.55,
+      "tokens": 1550
+    },
+    {
+      "kind": "stats",
+      "question": "What is Bortoleto's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "BOR",
+      "expect_number": 51.4,
+      "reply": "Bortoleto\u2019s teammate head\u2011to\u2011head win percentage is **51.4\u202f%** (based on 38 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Bortoleto",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "BOR \u2014 Teammate H2H win % (to date): 51.4%\n(Based on 38 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 2.51,
+      "tokens": 1585
+    },
+    {
+      "kind": "stats",
+      "question": "What is HAD's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "HAD",
+      "expect_number": 55.9,
+      "reply": "HAD\u2019s teammate head\u2011to\u2011head win percentage is **55.9\u202f%** (based on 35 races up to 2026 R11).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "HAD",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "HAD \u2014 Teammate H2H win % (to date): 55.9%\n(Based on 35 races in dataset, latest: 2026 R11)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 2.13,
+      "tokens": 1531
+    },
+    {
+      "kind": "stats",
+      "question": "What is Lando Norris's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "NOR",
+      "expect_number": 62.4,
+      "reply": "Lando\u202fNorris\u2019s teammate head\u2011to\u2011head win percentage is **62.4\u202f%** (based on 166 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Lando Norris",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "NOR \u2014 Teammate H2H win % (to date): 62.4%\n(Based on 166 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.46,
+      "tokens": 1552
+    },
+    {
+      "kind": "stats",
+      "question": "What is Ocon's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "OCO",
+      "expect_number": 47.6,
+      "reply": "Ocon\u2019s teammate head\u2011to\u2011head win percentage is **47.6\u202f%** (based on 165 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Ocon",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "OCO \u2014 Teammate H2H win % (to date): 47.6%\n(Based on 165 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.17,
+      "tokens": 1560
+    },
+    {
+      "kind": "stats",
+      "question": "What is PIA's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "PIA",
+      "expect_number": 34.9,
+      "reply": "PIA\u2019s teammate head\u2011to\u2011head win percentage is **34.9\u202f%** (based on 84 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "PIA",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "PIA \u2014 Teammate H2H win % (to date): 34.9%\n(Based on 84 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 10.55,
+      "tokens": 1579
+    },
+    {
+      "kind": "stats",
+      "question": "What is George Russell's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "RUS",
+      "expect_number": 61.8,
+      "reply": "George Russell\u2019s teammate head\u2011to\u2011head win percentage is **61.8\u202f%** (based on 166 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "George Russell",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "RUS \u2014 Teammate H2H win % (to date): 61.8%\n(Based on 166 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 4.79,
+      "tokens": 1526
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 1 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 1,
+      "expect_text": [
+        "Russell"
+      ],
+      "reply": "The model predicts **George\u202fRussell** to win Round\u202f1 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 1,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 1:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Lando Norris (McLaren) [grid: P6]\nP5: Isack Hadjar (Red Bull Racing) [grid: P3]\nP6: Oscar Piastri (McLaren) [grid: P5]\nP7: Max Verstappen (Red Bull Racing) [grid: P20]\nP8: Lewis Hamilton (Ferrari) [grid: P7]\nP9: Liam Lawson (Racing Bulls) [grid: P8]\nP10: Oliver Bearman (Haas F1 Team) [grid: P12]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 5.06,
+      "tokens": 1688
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 2 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 2,
+      "expect_text": [
+        "Antonelli"
+      ],
+      "reply": "The model predicts **Kimi\u202fAntonelli** (Mercedes) to win Round\u202f2 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 2,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 2:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Lewis Hamilton (Ferrari) [grid: P3]\nP4: Charles Leclerc (Ferrari) [grid: P4]\nP5: Oscar Piastri (McLaren) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P8]\nP8: Isack Hadjar (Red Bull Racing) [grid: P9]\nP9: Oliver Bearman (Haas F1 Team) [grid: P10]\nP10: Pierre Gasly (Alpine) [grid: P7]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 5.33,
+      "tokens": 1693
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 4 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 4,
+      "expect_text": [
+        "Antonelli"
+      ],
+      "reply": "The model predicts **Kimi\u202fAntonelli** to win Round\u202f4 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 4,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 4:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Max Verstappen (Red Bull Racing) [grid: P2]\nP3: Lando Norris (McLaren) [grid: P4]\nP4: Charles Leclerc (Ferrari) [grid: P3]\nP5: George Russell (Mercedes) [grid: P5]\nP6: Lewis Hamilton (Ferrari) [grid: P6]\nP7: Oscar Piastri (McLaren) [grid: P7]\nP8: Franco Colapinto (Alpine) [grid: P8]\nP9: Pierre Gasly (Alpine) [grid: P9]\nP10: Liam Lawson (Racing Bulls) [grid: P11]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.28,
+      "tokens": 1689
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 7 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 7,
+      "expect_text": [
+        "Russell"
+      ],
+      "reply": "The model predicts **George\u202fRussell** to win Round\u202f7 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 7,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 7:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Lewis Hamilton (Ferrari) [grid: P2]\nP3: Kimi Antonelli (Mercedes) [grid: P3]\nP4: Lando Norris (McLaren) [grid: P4]\nP5: Max Verstappen (Red Bull Racing) [grid: P5]\nP6: Isack Hadjar (Red Bull Racing) [grid: P6]\nP7: Oscar Piastri (McLaren) [grid: P7]\nP8: Charles Leclerc (Ferrari) [grid: P10]\nP9: Liam Lawson (Racing Bulls) [grid: P8]\nP10: Arvid Lindblad (Racing Bulls) [grid: P11]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 6.42,
+      "tokens": 1685
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 8 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 8,
+      "expect_text": [
+        "Russell"
+      ],
+      "reply": "The model predicts **George\u202fRussell** to win Round\u202f8 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 8,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 8:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P4]\nP3: Charles Leclerc (Ferrari) [grid: P2]\nP4: Max Verstappen (Red Bull Racing) [grid: P5]\nP5: Lewis Hamilton (Ferrari) [grid: P3]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Oscar Piastri (McLaren) [grid: P7]\nP9: Liam Lawson (Racing Bulls) [grid: P9]\nP10: Arvid Lindblad (Racing Bulls) [grid: P10]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.48,
+      "tokens": 1685
+    },
+    {
+      "kind": "predict",
+      "question": "Who does the model predict to win round 11 of the 2026 season?",
+      "tool": "race_predictor_tool",
+      "season": 2026,
+      "round": 11,
+      "expect_text": [
+        "Norris"
+      ],
+      "reply": "The model predicts **Lando\u202fNorris** to win Round\u202f11 of the 2026 season.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 11,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 11:\nP1: Lando Norris (McLaren) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P7]\nP3: Charles Leclerc (Ferrari) [grid: P2]\nP4: Max Verstappen (Red Bull Racing) [grid: P4]\nP5: Lewis Hamilton (Ferrari) [grid: P5]\nP6: Oscar Piastri (McLaren) [grid: P3]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: George Russell (Mercedes) [grid: P6]\nP9: Arvid Lindblad (Racing Bulls) [grid: P9]\nP10: Liam Lawson (Racing Bulls) [grid: P11]",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 2.96,
+      "tokens": 1689
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Oliver Bearman predicted to finish P10 in round 1 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 1,
+      "driver": "BEA",
+      "expect_text": [
+        "Qualifying position"
+      ],
+      "reply": "Oliver Bearman is projected to finish **P10** in the 2026 Bahrain Grand Prix because the model weighs several quantitative factors that, together, offset his starting position.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| **Grid position** | P12 | +0.075 (hurts finish) |\n| **Qualifying position** | 12 | +0.156 (hurts finish) |\n| **Q3 gap to pole (seconds)** | unknown | +0.142 (hurts finish) |\n| **Qualifying gap to pole (% of lap time)** | 2.284\u202f% | +0.063 (hurts finish) |\n| **Driver points in last 5 races** | 4.2 | \u20130.141 (helps finish) |\n\nThe positive SHAP values for grid and qualifying position, as well as the gaps to pole, indicate that starting from P12 and qualifying 12th with a noticeable time deficit to the pole sitter will likely keep Bearman from a front\u2011row finish. The negative SHAP value for recent points suggests he has shown some improvement, which nudges the prediction up by a couple of places.  \n\nCombining these effects, the model estimates that Bearman will climb from P12 to **P10** in the race.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 1,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "Oliver Bearman",
+            "round_num": 1,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 1:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P2]\nP3: Charles Leclerc (Ferrari) [grid: P4]\nP4: Lando Norris (McLaren) [grid: P6]\nP5: Isack Hadjar (Red Bull Racing) [grid: P3]\nP6: Oscar Piastri (McLaren) [grid: P5]\nP7: Max Verstappen (Red Bull Racing) [grid: P20]\nP8: Lewis Hamilton (Ferrari) [grid: P7]\nP9: Liam Lawson (Racing Bulls) [grid: P8]\nP10: Oliver Bearman (Haas F1 Team) [grid: P12]\nSHAP explanation for Oliver Bearman (predicted P10):\n\nKey factors driving this prediction:\n  - Qualifying position: value 12; SHAP contribution +0.156 (hurts finish)\n  - Q3 gap to pole (s): value unknown; SHAP contribution +0.142 (hurts finish)\n  - Driver points (last 5 races): value 4.2; SHAP contribution -0.141 (favours better finish)\n  - Grid position: value 12; SHAP contribution +0.075 (hurts finish)\n  - Quali gap to pole (%): value 2.284%; SHAP contribution +0.063 (hurts finish)\n\nGrid position: P12\nPredicted finish: P10\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 8.69,
+      "tokens": 3273
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Pierre Gasly predicted to finish P10 in round 2 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 2,
+      "driver": "GAS",
+      "expect_text": [
+        "Team avg finish"
+      ],
+      "reply": "Pierre Gasly is projected to finish 10th in the 2026 Round\u202f2 because the model weighs several recent performance indicators that collectively push his expected result down.\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Team average finish (last\u202f5 races) | 14.6 | +0.164 (hurts finish) |\n| Q3 gap to pole (s) | 0.809 | \u20130.163 (helps finish) |\n| Grid position | 7 | \u20130.144 (helps finish) |\n| Driver points (last\u202f5 races) | 0.4 | +0.114 (hurts finish) |\n| Team qualifying pace delta | 0.809 | \u20130.047 (helps finish) |\n\nThe strongest negative influence comes from the Alpine team\u2019s recent average finish, which is well above the field and pulls Gasly\u2019s predicted position down. His grid spot (P7) and decent Q3 gap to pole help, but the high team\u2011average finish and his own low points tally in the last five races outweigh those positives, resulting in a predicted finish of 10th.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 2,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "Pierre Gasly",
+            "round_num": 2,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 2:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: George Russell (Mercedes) [grid: P2]\nP3: Lewis Hamilton (Ferrari) [grid: P3]\nP4: Charles Leclerc (Ferrari) [grid: P4]\nP5: Oscar Piastri (McLaren) [grid: P5]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Max Verstappen (Red Bull Racing) [grid: P8]\nP8: Isack Hadjar (Red Bull Racing) [grid: P9]\nP9: Oliver Bearman (Haas F1 Team) [grid: P10]\nP10: Pierre Gasly (Alpine) [grid: P7]\nSHAP explanation for Pierre Gasly (predicted P10):\n\nKey factors driving this prediction:\n  - Team avg finish (last 5 races): value 14.6; SHAP contribution +0.164 (hurts finish)\n  - Q3 gap to pole (s): value 0.809; SHAP contribution -0.163 (favours better finish)\n  - Grid position: value 7; SHAP contribution -0.144 (favours better finish)\n  - Driver points (last 5 races): value 0.4; SHAP contribution +0.114 (hurts finish)\n  - Team quali pace delta: value 0.809; SHAP contribution -0.047 (favours better finish)\n\nGrid position: P7\nPredicted finish: P10\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": false,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 11.18,
+      "tokens": 3214
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Nico Hulkenberg predicted to finish P13 in round 4 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 4,
+      "driver": "HUL",
+      "expect_text": [
+        "Team avg finish"
+      ],
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 13th in the 2026\u202fRound\u202f4 because several key factors pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | P10 | +0.153 |\n| Team average finish (last\u202f5 races) | 14.5 | +0.169 |\n| Q3 gap to pole (s) | unknown | +0.167 |\n| Driver points (last\u202f5 races) | 0.4 | +0.109 |\n| Team qualifying\u2011pace delta | unknown | +0.068 |\n\nAll of these contributions are positive, meaning they worsen the predicted finish. Starting from P10, a relatively low\u2011performing team (average finish 14.5) and a large Q3 gap to pole suggest limited pace. H\u00fclkenberg\u2019s own points tally over the last five races is very low (0.4), indicating recent struggles. Together, these factors push the model\u2019s estimate from the grid position to a predicted 13th place.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 4,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "HUL",
+            "round_num": 4,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 4:\nP1: Kimi Antonelli (Mercedes) [grid: P1]\nP2: Max Verstappen (Red Bull Racing) [grid: P2]\nP3: Lando Norris (McLaren) [grid: P4]\nP4: Charles Leclerc (Ferrari) [grid: P3]\nP5: George Russell (Mercedes) [grid: P5]\nP6: Lewis Hamilton (Ferrari) [grid: P6]\nP7: Oscar Piastri (McLaren) [grid: P7]\nP8: Franco Colapinto (Alpine) [grid: P8]\nP9: Pierre Gasly (Alpine) [grid: P9]\nP10: Liam Lawson (Racing Bulls) [grid: P11]\nSHAP explanation for Nico Hulkenberg (predicted P13):\n\nKey factors driving this prediction:\n  - Team avg finish (last 5 races): value 14.5; SHAP contribution +0.169 (hurts finish)\n  - Q3 gap to pole (s): value unknown; SHAP contribution +0.167 (hurts finish)\n  - Qualifying position: value 10; SHAP contribution +0.153 (hurts finish)\n  - Driver points (last 5 races): value 0.4; SHAP contribution +0.109 (hurts finish)\n  - Team quali pace delta: value unknown; SHAP contribution +0.068 (hurts finish)\n\nGrid position: P10\nPredicted finish: P13\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": false,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 11.85,
+      "tokens": 3243
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Lando Norris predicted to finish P4 in round 7 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 7,
+      "driver": "NOR",
+      "expect_text": [
+        "Qualifying position"
+      ],
+      "reply": "Lando Norris is projected to finish **P4** in round\u202f7 of 2026 because the model\u2019s key drivers all point to a strong, but not dominant, race performance:\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| **Grid position** | P4 | \u20130.145 | Slightly favours a P4 finish |\n| **Qualifying position** | 4 | \u20130.738 | Strongly favours a P4 finish |\n| **Q3 gap to pole (s)** | 0.322 | \u20130.253 | Small gap keeps him near the front |\n| **Team quali pace delta** | 0.366 | \u20130.074 | McLaren\u2019s pace is close to the front\u2011row pace |\n| **Avg finish at circuit** | unknown | +0.027 | A small negative pull, but minimal |\n\nThe negative SHAP values (lower is better) for grid, qualifying, and Q3 gap dominate, pushing the predicted finish to match the starting grid of P4. The only slight drag comes from the average finish at the circuit, which is a very small positive contribution (+0.027), indicating a marginally worse historical performance there. Overall, the combination of a solid qualifying, a small gap to pole, and competitive team pace keeps Norris on the front row, resulting in a predicted P4 finish.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 7,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "Lando Norris",
+            "round_num": 7,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 7:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Lewis Hamilton (Ferrari) [grid: P2]\nP3: Kimi Antonelli (Mercedes) [grid: P3]\nP4: Lando Norris (McLaren) [grid: P4]\nP5: Max Verstappen (Red Bull Racing) [grid: P5]\nP6: Isack Hadjar (Red Bull Racing) [grid: P6]\nP7: Oscar Piastri (McLaren) [grid: P7]\nP8: Charles Leclerc (Ferrari) [grid: P10]\nP9: Liam Lawson (Racing Bulls) [grid: P8]\nP10: Arvid Lindblad (Racing Bulls) [grid: P11]\nSHAP explanation for Lando Norris (predicted P4):\n\nKey factors driving this prediction:\n  - Qualifying position: value 4; SHAP contribution -0.738 (favours better finish)\n  - Q3 gap to pole (s): value 0.322; SHAP contribution -0.253 (favours better finish)\n  - Grid position: value 4; SHAP contribution -0.145 (favours better finish)\n  - Team quali pace delta: value 0.366; SHAP contribution -0.074 (favours better finish)\n  - Avg finish at circuit: value unknown; SHAP contribution +0.027 (hurts finish)\n\nGrid position: P4\nPredicted finish: P4\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 19.97,
+      "tokens": 3288
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Nico Hulkenberg predicted to finish P15 in round 8 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 8,
+      "driver": "HUL",
+      "expect_text": [
+        "Qualifying position"
+      ],
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish 15th in the 2026\u202fRound\u202f8 because several key features pull his predicted result down:\n\n| Feature | Value | SHAP contribution |\n|---------|-------|-------------------|\n| Grid position | **P14** | +0.116 (hurts finish) |\n| Qualifying position | **P14** | +0.319 (hurts finish) |\n| Q3 gap to pole | *unknown* | +0.181 (hurts finish) |\n| Team average finish (last\u202f5 races) | **13.5** | +0.139 (hurts finish) |\n| Driver points (last\u202f5 races) | **0** | +0.110 (hurts finish) |\n\nThe combination of starting from 14th, a poor qualifying result, a relatively slow team, and no recent points all add positive SHAP values that push the model\u2019s predicted finish toward the back of the field, landing him at 15th.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 8,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "HUL",
+            "round_num": 8,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 8:\nP1: George Russell (Mercedes) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P4]\nP3: Charles Leclerc (Ferrari) [grid: P2]\nP4: Max Verstappen (Red Bull Racing) [grid: P5]\nP5: Lewis Hamilton (Ferrari) [grid: P3]\nP6: Lando Norris (McLaren) [grid: P6]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: Oscar Piastri (McLaren) [grid: P7]\nP9: Liam Lawson (Racing Bulls) [grid: P9]\nP10: Arvid Lindblad (Racing Bulls) [grid: P10]\nSHAP explanation for Nico Hulkenberg (predicted P15):\n\nKey factors driving this prediction:\n  - Qualifying position: value 14; SHAP contribution +0.319 (hurts finish)\n  - Q3 gap to pole (s): value unknown; SHAP contribution +0.181 (hurts finish)\n  - Team avg finish (last 5 races): value 13.5; SHAP contribution +0.139 (hurts finish)\n  - Grid position: value 14; SHAP contribution +0.116 (hurts finish)\n  - Driver points (last 5 races): value 0; SHAP contribution +0.110 (hurts finish)\n\nGrid position: P14\nPredicted finish: P15\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 12.04,
+      "tokens": 3226
+    },
+    {
+      "kind": "explain",
+      "question": "Why is Nico Hulkenberg predicted to finish P11 in round 11 of 2026?",
+      "tool": "explain_prediction_tool",
+      "season": 2026,
+      "round": 11,
+      "driver": "HUL",
+      "expect_text": [
+        "Q3 gap to pole"
+      ],
+      "reply": "Nico\u202fH\u00fclkenberg is projected to finish **P11** in round\u202f11 of 2026 mainly because his starting position and recent performance metrics are not favourable for a top\u201110 result.\n\n| Feature | Value | SHAP contribution | Effect on finish |\n|---------|-------|-------------------|------------------|\n| Grid position | **P10** | **+0.142** | Starting from 10th already limits upside |\n| Q3 gap to pole (s) | 1.479\u202fs | **\u20130.185** | A relatively small gap helps, but not enough to offset other factors |\n| Driver points (last\u202f5 races) | 0 | **+0.092** | No recent points signal a dip in form |\n| Team average finish (last\u202f5 races) | 12.9 | **+0.078** | The team\u2019s recent results are below midfield |\n| Qualifying gap to pole (%) | 1.855\u202f% | **+0.064** | A modest gap still hurts the predicted outcome |\n\nThe positive SHAP values (except the small negative from the Q3 gap) all push the predicted finish downwards. Starting from P10, combined with a lack of recent points and a team that has been finishing around 13th on average, the model expects H\u00fclkenberg to finish one place lower than his grid spot, i.e., **P11**.",
+      "tool_calls": [
+        {
+          "name": "race_predictor_tool",
+          "args": {
+            "round_num": 11,
+            "season": 2026
+          }
+        },
+        {
+          "name": "explain_prediction_tool",
+          "args": {
+            "driver_id": "HUL",
+            "round_num": 11,
+            "season": 2026
+          }
+        }
+      ],
+      "tool_output": "Predicted top 10 for 2026 Round 11:\nP1: Lando Norris (McLaren) [grid: P1]\nP2: Kimi Antonelli (Mercedes) [grid: P7]\nP3: Charles Leclerc (Ferrari) [grid: P2]\nP4: Max Verstappen (Red Bull Racing) [grid: P4]\nP5: Lewis Hamilton (Ferrari) [grid: P5]\nP6: Oscar Piastri (McLaren) [grid: P3]\nP7: Isack Hadjar (Red Bull Racing) [grid: P8]\nP8: George Russell (Mercedes) [grid: P6]\nP9: Arvid Lindblad (Racing Bulls) [grid: P9]\nP10: Liam Lawson (Racing Bulls) [grid: P11]\nSHAP explanation for Nico Hulkenberg (predicted P11):\n\nKey factors driving this prediction:\n  - Q3 gap to pole (s): value 1.479; SHAP contribution -0.185 (favours better finish)\n  - Qualifying position: value 10; SHAP contribution +0.142 (hurts finish)\n  - Driver points (last 5 races): value 0; SHAP contribution +0.092 (hurts finish)\n  - Team avg finish (last 5 races): value 12.9; SHAP contribution +0.078 (hurts finish)\n  - Quali gap to pole (%): value 1.855%; SHAP contribution +0.064 (hurts finish)\n\nGrid position: P10\nPredicted finish: P11\n\n\n'value' is the feature's actual value for this driver; 'SHAP contribution' is how much it moved the model's score (negative = better finish) and is not a time, position or count. Use these specific values to generate a grounded natural language explanation. Do not invent statistics not listed above.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": false,
+      "ungrounded_numbers": [
+        13.0
+      ],
+      "latency_s": 10.33,
+      "tokens": 3327
+    },
+    {
+      "kind": "stats",
+      "question": "How does Carlos do against his teammate head-to-head, as a win percentage?",
+      "tool": "features_for_stats_tool",
+      "driver": "SAI",
+      "expect_number": 45.9,
+      "reply": "Carlos has a teammate head\u2011to\u2011head win percentage of **45.9\u202f%** (based on 186 races up to 2026 R14).",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Carlos",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "SAI \u2014 Teammate H2H win % (to date): 45.9%\n(Based on 186 races in dataset, latest: 2026 R14)",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 7.98,
+      "tokens": 1590
+    },
+    {
+      "kind": "ambiguous",
+      "question": "What is Kimi's teammate head-to-head win percentage?",
+      "tool": "features_for_stats_tool",
+      "expect_text": [
+        "Raikkonen",
+        "Antonelli"
+      ],
+      "expect_no_value": true,
+      "reply": "Which \u201cKimi\u201d are you referring to?  \n- Kimi\u202fR\u00e4ikk\u00f6nen (RAI)  \n- Andrea\u202fKimi\u202fAntonelli (ANT)  \n\nPlease specify.",
+      "tool_calls": [
+        {
+          "name": "features_for_stats_tool",
+          "args": {
+            "driver_id": "Kimi",
+            "metric": "teammate_win_pct"
+          }
+        }
+      ],
+      "tool_output": "'Kimi' matches several drivers: Kimi R\u00e4ikk\u00f6nen (RAI), Andrea Kimi Antonelli (ANT). Ask which one is meant.",
+      "tool_ok": true,
+      "args_ok": true,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 1.06,
+      "tokens": 1560
+    },
+    {
+      "kind": "out_of_scope",
+      "question": "What was the fastest lap at the 1995 Monaco Grand Prix?",
+      "tool": null,
+      "reply": "I\u2019m sorry, but I don\u2019t have that information.",
+      "tool_calls": [],
+      "tool_output": "",
+      "tool_ok": true,
+      "args_ok": null,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 4.42,
+      "tokens": 806
+    },
+    {
+      "kind": "out_of_scope",
+      "question": "What will the air temperature be on race day in S\u00e3o Paulo in 2026?",
+      "tool": null,
+      "reply": "I\u2019m sorry, but I don\u2019t have any data on the weather forecast for the 2026 S\u00e3o\u202fPaulo race.",
+      "tool_calls": [],
+      "tool_output": "",
+      "tool_ok": true,
+      "args_ok": null,
+      "correct": true,
+      "grounded": true,
+      "ungrounded_numbers": [],
+      "latency_s": 0.38,
+      "tokens": 800
+    }
+  ]
+}

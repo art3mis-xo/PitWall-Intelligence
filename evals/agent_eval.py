@@ -192,7 +192,9 @@ def main():
                "correct": rate(ok, "correct"), "grounded": rate(ok, "grounded"),
                "latency_median_s": round(statistics.median(lat), 2),
                "latency_p90_s": round(lat[int(0.9 * (len(lat) - 1))], 2),
-               "tokens_median": int(statistics.median(r["tokens"] for r in ok))}
+               "tokens_median": int(statistics.median(r["tokens"] for r in ok)),
+               "tool_calls_mean": round(statistics.mean(len(r["tool_calls"]) for r in ok), 2),
+               "tool_calls_max": max(len(r["tool_calls"]) for r in ok)}
 
     import pandas as pd
     df = pd.read_csv(ROOT / "data" / "features.csv")
@@ -209,6 +211,7 @@ def main():
         f"| Every number grounded in tool output | {summary['grounded']} |",
         f"| Latency, median / p90 | {summary['latency_median_s']} s / {summary['latency_p90_s']} s |",
         f"| Tokens per question, median | {summary['tokens_median']} |",
+        f"| Tool calls per question, mean / max | {summary['tool_calls_mean']} / {summary['tool_calls_max']} |",
         f"| Errors | {summary['errors']} |",
         "", "| Kind | Questions | Tool | Args | Correct | Grounded |", "|---|---|---|---|---|---|",
     ]

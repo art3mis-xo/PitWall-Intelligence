@@ -1,5 +1,6 @@
 from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
+import difflib
 import os
 import unicodedata
 from dotenv import load_dotenv, dotenv_values 
@@ -46,7 +47,12 @@ def resolve_driver(text: str) -> tuple[str | None, str]:
     if len(matches) > 1:
         options = ", ".join(f"{r.driver_full_name} ({r.driver_id})" for r in matches.itertuples())
         return None, f"'{text}' matches several drivers: {options}. Ask which one is meant."
-    return None, f"No driver called '{text}' in the dataset (2018 onwards)."
+    # Point the model at real options instead of letting it guess codes (it tried "SAS" for Sainz)
+    candidates = {_fold(n): f"{n} ({c})" for c, n in zip(drivers["driver_id"], drivers["driver_full_name"])}
+    candidates.update({_fold(c): f"{n} ({c})" for c, n in zip(drivers["driver_id"], drivers["driver_full_name"])})
+    close = dict.fromkeys(candidates[k] for k in difflib.get_close_matches(query, candidates, n=3, cutoff=0.6))
+    hint = f" Did you mean: {', '.join(close)}?" if close else ""
+    return None, f"No driver called '{text}' in the dataset (2018 onwards).{hint}"
 
 
 # Units, so the LLM can't confuse a fraction with a percentage (0.105 % is not 10.5 %)
@@ -203,8 +209,18 @@ Distinguish predicted finishing position from starting grid position. Never desc
 Be concise, analytical, and use F1 terminology naturally.
 When you have enough information to answer, respond directly without calling more tools."""
 
+MAX_TOOL_ROUNDS = 3   # rounds of tool calls per question; the eval's worst case is 2
+
+
 def agent_node(state:AgentState):
     messages = [SystemMessage(content=SYSTEM_PROMPT)]+state["messages"]
+    tool_rounds = sum(1 for m in state["messages"] if isinstance(m, AIMessage) and m.tool_calls)
+    if tool_rounds >= MAX_TOOL_ROUNDS:
+        # Budget spent: answer from what the tools already returned. Without this, a model that
+        # keeps calling tools only stops at LangGraph's step limit, with an error and no answer.
+        budget = SystemMessage(content="Tool budget reached. Answer now using only the tool results above; "
+                                       "if they are not enough, say what is missing.")
+        return {"messages": [llm.invoke(messages + [budget])]}
     output = llm_with_tools.invoke(messages)
     if not output.tool_calls and not str(output.content).strip():
         # The model sometimes ends with an empty reply (seen in evals/results/agent_eval*.md for
