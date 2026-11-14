@@ -94,6 +94,9 @@ def run_case(case: dict) -> dict:
             out = agent.app.invoke({"messages": [HumanMessage(case["question"])]}, {"recursion_limit": 10})
             break
         except Exception as e:   # rate limits and transient Groq errors
+            if "tokens per day" in str(e):   # a daily quota doesn't come back by waiting minutes
+                sys.exit("Groq daily token limit reached; no results written. Retry after the quota resets "
+                         "or set GROQ_API_KEY to a separate eval key.")
             if attempt == 3:
                 return {**case, "error": str(e)[:200]}
             time.sleep(10 * (attempt + 1))
