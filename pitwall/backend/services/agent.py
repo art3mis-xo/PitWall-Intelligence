@@ -194,7 +194,7 @@ SYSTEM_PROMPT = """You are PitWall Intelligence, an expert F1 analyst AI.
 You have access to three tools:
 - race_predictor_tool: predict finishing order for any F1 race
 - explain_prediction_tool: get SHAP-grounded explanation for a driver's predicted result
-- features_for_stats_tool: look up a driver's career statistics, such as teammate head-to-head win rate (no season needed)
+- features_for_stats_tool: look up a driver's career statistics, such as teammate head-to-head win rate (no season needed). Three-letter codes like HAD or NOR are driver codes.
 
 Pass driver names to tools exactly as the user wrote them; the tools resolve names and tell you when a name matches several drivers, in which case ask the user which one they mean. Don't assume a driver has no data before checking with a tool.
 Always ground your answers in data from these tools and any explicit race context in the user message. Do not invent statistics, grid positions, pole positions, or race results.
@@ -206,6 +206,11 @@ When you have enough information to answer, respond directly without calling mor
 def agent_node(state:AgentState):
     messages = [SystemMessage(content=SYSTEM_PROMPT)]+state["messages"]
     output = llm_with_tools.invoke(messages)
+    if not output.tool_calls and not str(output.content).strip():
+        # The model sometimes ends with an empty reply (seen in evals/results/agent_eval*.md for
+        # code-only questions like "What is HAD's ..."); ask once more instead of returning nothing.
+        retry = messages + [SystemMessage(content="Your last reply was empty. Use a tool or answer the user.")]
+        output = llm_with_tools.invoke(retry)
     return {"messages":[output]}
 
 def should_continue(state: AgentState):

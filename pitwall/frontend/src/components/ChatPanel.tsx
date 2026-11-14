@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { chatStream } from '../api/intelligence'
 
 interface Message {
@@ -119,7 +121,11 @@ export default function ChatPanel({ raceContext }: ChatPanelProps) {
                 ? 'bg-red-600 text-white'
                 : 'bg-gray-800 text-gray-200'
             }`}>
-              {msg.content || (
+              {msg.content ? (
+                msg.role === 'assistant'
+                  ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                  : msg.content
+              ) : (
                 <span className="inline-flex gap-1 items-center">
                   <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"
                     style={{ animationDelay: '0ms' }} />
